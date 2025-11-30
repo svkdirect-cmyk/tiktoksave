@@ -1,16 +1,8 @@
-class VideoDownloader {
+class TikTokSave {
     constructor() {
         this.telegram = window.Telegram?.WebApp;
         this.currentVideo = null;
         this.isProcessing = false;
-        
-        // API endpoints (замените на ваши)
-        this.apiEndpoints = {
-            youtube: 'https://your-youtube-api.com/download',
-            tiktok: 'https://your-tiktok-api.com/download',
-            instagram: 'https://your-instagram-api.com/download'
-        };
-        
         this.init();
     }
 
@@ -19,9 +11,7 @@ class VideoDownloader {
         this.bindEvents();
         this.loadHistory();
         this.applyTheme();
-        this.checkUrlParams();
-        
-        console.log('🎬 VideoGet initialized');
+        console.log('🎬 TikTokSave initialized');
     }
 
     initializeTelegram() {
@@ -35,11 +25,6 @@ class VideoDownloader {
             this.telegram.enableClosingConfirmation();
             this.telegram.setHeaderColor('#000000');
             this.telegram.setBackgroundColor('#000000');
-            
-            // Показываем основную кнопку
-            this.telegram.MainButton.setText('Скачать видео');
-            this.telegram.MainButton.show();
-            
             console.log('✅ Telegram Web App initialized');
         } catch (error) {
             console.error('❌ Telegram init error:', error);
@@ -104,11 +89,6 @@ class VideoDownloader {
             this.clearHistory();
         });
 
-        // Support button
-        document.getElementById('supportBtn').addEventListener('click', () => {
-            this.contactSupport();
-        });
-
         // Modal close buttons
         document.getElementById('closeInfoModal').addEventListener('click', () => {
             this.hideModals();
@@ -160,8 +140,6 @@ class VideoDownloader {
         tab.classList.add('active');
         
         const platform = tab.dataset.platform;
-        const input = document.getElementById('videoUrl');
-        
         this.updatePlaceholder(platform);
         this.validateUrl();
     }
@@ -186,7 +164,6 @@ class VideoDownloader {
             this.validateUrl();
         } catch (error) {
             this.showNotification('❌ Не удалось получить доступ к буферу', 'error');
-            // Fallback: focus and let user paste manually
             document.getElementById('videoUrl').focus();
         }
     }
@@ -228,6 +205,15 @@ class VideoDownloader {
         return 'unknown';
     }
 
+    getPlatformName(platform) {
+        const names = {
+            'tiktok': 'TikTok',
+            'youtube': 'YouTube', 
+            'instagram': 'Instagram'
+        };
+        return names[platform] || 'Видео';
+    }
+
     async processVideo() {
         if (this.isProcessing) return;
         
@@ -247,7 +233,9 @@ class VideoDownloader {
         this.setLoading(true);
 
         try {
-            const videoInfo = await this.fetchVideoInfo(url);
+            // Эмуляция обработки видео
+            await this.simulateVideoProcessing(url);
+            const videoInfo = this.generateVideoInfo(url);
             this.displayResults(videoInfo);
             this.showNotification('✅ Видео готово к скачиванию');
         } catch (error) {
@@ -259,72 +247,41 @@ class VideoDownloader {
         }
     }
 
-    async fetchVideoInfo(url) {
-        // Эмуляция получения информации о видео
-        // В реальном приложении здесь будет запрос к вашему API
-        
-        return new Promise((resolve, reject) => {
+    async simulateVideoProcessing(url) {
+        return new Promise((resolve) => {
             setTimeout(() => {
-                try {
-                    const platform = this.detectPlatform(url);
-                    const mockData = this.generateMockVideoInfo(url, platform);
-                    resolve(mockData);
-                } catch (error) {
-                    reject(error);
-                }
+                resolve();
             }, 2000);
         });
     }
 
-    generateMockVideoInfo(url, platform) {
+    generateVideoInfo(url) {
+        const platform = this.detectPlatform(url);
         const titles = {
             tiktok: ['Трендовый танец TikTok', 'Смешное видео с котиком', 'Лайфхак который изменит всё'],
             youtube: ['Обзор нового смартфона', 'Музыкальный клип 2024', 'Обучение программированию'],
             instagram: ['Красивый Reel с отпуска', 'Рецепт вкусного блюда', 'Тренды моды 2024']
         };
 
-        const authors = {
-            tiktok: ['@tiktok_user', '@dance_queen', '@funny_cats'],
-            youtube: ['TechReview', 'MusicChannel', 'LearnWithMe'],
-            instagram: ['travel_blogger', 'chef_cooking', 'fashion_guru']
-        };
-
         const platformTitles = titles[platform] || titles.tiktok;
-        const platformAuthors = authors[platform] || authors.tiktok;
 
         return {
             title: platformTitles[Math.floor(Math.random() * platformTitles.length)],
-            author: platformAuthors[Math.floor(Math.random() * platformAuthors.length)],
-            duration: this.generateMockDuration(),
-            quality: ['720p', '480p', '360p'],
-            size: Math.floor(Math.random() * 50) + 10,
-            thumbnail: null,
-            url: url,
             platform: platform,
-            no_watermark: true
+            url: url,
+            noWatermark: true
         };
-    }
-
-    generateMockDuration() {
-        const minutes = Math.floor(Math.random() * 3) + 1;
-        const seconds = Math.floor(Math.random() * 60);
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
     displayResults(videoInfo) {
         this.currentVideo = videoInfo;
 
-        // Update UI with video info
         document.getElementById('videoTitle').textContent = videoInfo.title;
-        document.getElementById('videoDuration').textContent = videoInfo.duration;
-        document.getElementById('videoSize').textContent = `${videoInfo.size} MB`;
-        document.getElementById('videoQuality').textContent = 'HD 720p';
+        document.getElementById('videoPlatform').textContent = this.getPlatformName(videoInfo.platform);
 
-        // Show results section
         const resultsSection = document.getElementById('resultsSection');
         resultsSection.classList.remove('hidden');
         
-        // Scroll to results
         setTimeout(() => {
             resultsSection.scrollIntoView({ 
                 behavior: 'smooth',
@@ -339,21 +296,17 @@ class VideoDownloader {
 
     async downloadVideo() {
         if (!this.currentVideo) return;
-
-        const quality = document.querySelector('input[name="quality"]:checked').value;
         
         try {
             this.showNotification('⏳ Начинаем скачивание...');
             
-            // В реальном приложении здесь будет запрос к API
-            const downloadUrl = await this.getDownloadUrl(this.currentVideo.url, quality);
+            // Эмуляция скачивания
+            await this.simulateDownload();
             
-            // Создаем временную ссылку для скачивания
-            this.triggerDownload(downloadUrl, this.currentVideo.title);
+            // Создаем демо-файл для скачивания
+            this.createDemoDownload();
             
-            // Сохраняем в историю
             this.saveToHistory(this.currentVideo);
-            
             this.showNotification('✅ Видео успешно скачано!');
             
         } catch (error) {
@@ -362,34 +315,29 @@ class VideoDownloader {
         }
     }
 
-    async getDownloadUrl(videoUrl, quality) {
-        // Эмуляция получения ссылки для скачивания
-        // В реальном приложении здесь будет запрос к вашему API
-        
+    async simulateDownload() {
         return new Promise((resolve) => {
             setTimeout(() => {
-                // Создаем blob URL для демонстрации
-                const blob = new Blob(['Demo video content'], { type: 'video/mp4' });
-                const url = URL.createObjectURL(blob);
-                resolve(url);
-            }, 1000);
+                resolve();
+            }, 1500);
         });
     }
 
-    triggerDownload(url, title) {
+    createDemoDownload() {
+        const content = 'Это демо-файл. В реальном приложении здесь будет ваше видео без водяных знаков.';
+        const blob = new Blob([content], { type: 'video/mp4' });
+        const url = URL.createObjectURL(blob);
+        
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.sanitizeFilename(title) + '.mp4';
+        a.download = this.sanitizeFilename(this.currentVideo.title) + '.mp4';
         a.style.display = 'none';
         
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         
-        // Clean up blob URL
-        if (url.startsWith('blob:')) {
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-        }
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     sanitizeFilename(filename) {
@@ -410,23 +358,21 @@ class VideoDownloader {
             title: videoInfo.title,
             url: videoInfo.url,
             platform: videoInfo.platform,
-            date: new Date().toISOString(),
-            size: videoInfo.size
+            date: new Date().toISOString()
         };
         
-        // Добавляем в начало и ограничиваем 10 элементами
         history.unshift(historyItem);
         if (history.length > 10) {
             history.pop();
         }
         
-        localStorage.setItem('videoDownloadHistory', JSON.stringify(history));
+        localStorage.setItem('tiktoksave_history', JSON.stringify(history));
         this.loadHistory();
     }
 
     getHistory() {
         try {
-            return JSON.parse(localStorage.getItem('videoDownloadHistory') || '[]');
+            return JSON.parse(localStorage.getItem('tiktoksave_history') || '[]');
         } catch {
             return [];
         }
@@ -453,9 +399,7 @@ class VideoDownloader {
                     <div class="history-meta">
                         <span>${new Date(item.date).toLocaleDateString()}</span>
                         <span>•</span>
-                        <span>${item.size} MB</span>
-                        <span>•</span>
-                        <span>${this.getPlatformIcon(item.platform)}</span>
+                        <span>${this.getPlatformIcon(item.platform)} ${this.getPlatformName(item.platform)}</span>
                     </div>
                 </div>
                 <div class="history-actions">
@@ -483,7 +427,7 @@ class VideoDownloader {
 
     clearHistory() {
         if (confirm('Очистить всю историю загрузок?')) {
-            localStorage.removeItem('videoDownloadHistory');
+            localStorage.removeItem('tiktoksave_history');
             this.loadHistory();
             this.showNotification('🗑️ История очищена');
         }
@@ -515,10 +459,9 @@ class VideoDownloader {
         notification.className = `notification ${type}`;
         notification.classList.remove('hidden');
         
-        // Auto-hide after 5 seconds
         setTimeout(() => {
             this.hideNotification();
-        }, 5000);
+        }, 4000);
     }
 
     hideNotification() {
@@ -537,14 +480,6 @@ class VideoDownloader {
         document.querySelectorAll('.modal').forEach(modal => {
             modal.classList.add('hidden');
         });
-    }
-
-    contactSupport() {
-        const email = 'support@videoget.com';
-        const subject = 'Помощь с VideoGet';
-        const body = 'Здравствуйте! У меня возникла проблема с приложением:\n\n';
-        
-        window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
     }
 
     toggleTheme() {
@@ -566,16 +501,6 @@ class VideoDownloader {
         toggleBtn.querySelector('.theme-icon').textContent = savedTheme === 'light' ? '🌙' : '☀️';
     }
 
-    checkUrlParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoUrl = urlParams.get('url');
-        
-        if (videoUrl) {
-            document.getElementById('videoUrl').value = videoUrl;
-            this.validateUrl();
-        }
-    }
-
     escapeHtml(unsafe) {
         return unsafe
             .replace(/&/g, "&amp;")
@@ -584,50 +509,13 @@ class VideoDownloader {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
-
-    // Аналитика (опционально)
-    trackEvent(category, action, label) {
-        if (typeof gtag !== 'undefined') {
-            gtag('event', action, {
-                event_category: category,
-                event_label: label
-            });
-        }
-    }
-}
-
-// Service Worker регистрация
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('SW registered: ', registration);
-            })
-            .catch(function(registrationError) {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
 }
 
 // Инициализация приложения
 let app;
 
 document.addEventListener('DOMContentLoaded', function() {
-    app = new VideoDownloader();
-    
-    // Preload resources
-    const preloadLinks = [
-        '/assets/icons/icon-192.png',
-        '/assets/icons/icon-512.png'
-    ];
-    
-    preloadLinks.forEach(href => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = href;
-        link.as = 'image';
-        document.head.appendChild(link);
-    });
+    app = new TikTokSave();
 });
 
 // Обработка ошибок
