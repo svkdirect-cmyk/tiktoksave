@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VideoGet • Скачать видео без водяных знаков</title>
-    <meta name="description" content="Скачивайте видео из TikTok, YouTube, Instagram без водяных знаков прямо в Telegram">
+    <title>TikTokSave • Скачать видео без водяных знаков</title>
+    <meta name="description" content="Скачивайте видео из TikTok, YouTube, Instagram без водяных знаков">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+    <link rel="icon" type="image/png" href="assets/icon-192.png">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- YTDL для YouTube -->
-    <script src="https://cdn.jsdelivr.net/npm/ytdl-core@4.11.5/dist/ytdl-core.min.js"></script>
 </head>
 <body>
     <div class="app">
@@ -18,8 +16,8 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <h1 class="logo">🎬 VideoGet</h1>
-                    <span class="beta-badge">BETA</span>
+                    <h1 class="logo">🎬 TikTokSave</h1>
+                    <span class="beta-badge">FREE</span>
                 </div>
                 <div class="header-actions">
                     <button class="icon-btn" id="themeToggle" title="Сменить тему">
@@ -105,27 +103,6 @@
                         </button>
                     </div>
                     
-                    <div class="quality-selector">
-                        <label class="quality-label">Качество:</label>
-                        <div class="quality-options">
-                            <label class="quality-option">
-                                <input type="radio" name="quality" value="720" checked>
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">HD 720p</span>
-                            </label>
-                            <label class="quality-option">
-                                <input type="radio" name="quality" value="480">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">SD 480p</span>
-                            </label>
-                            <label class="quality-option">
-                                <input type="radio" name="quality" value="360">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Low 360p</span>
-                            </label>
-                        </div>
-                    </div>
-                    
                     <button id="downloadBtn" class="download-btn">
                         <span class="btn-icon">⬇️</span>
                         <span class="btn-text">Скачать видео</span>
@@ -158,7 +135,7 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <strong>Скачайте без водяных знаков</strong>
-                            <p>Выберите качество и нажмите "Скачать видео"</p>
+                            <p>Нажмите "Скачать видео" и сохраните на устройство</p>
                         </div>
                     </div>
                 </div>
@@ -172,28 +149,16 @@
                         <button id="closeResults" class="close-btn">×</button>
                     </div>
                     
-                    <div class="video-preview" id="videoPreview">
-                        <div class="preview-placeholder">
-                            <span>🎥</span>
-                            <p>Предпросмотр видео</p>
-                        </div>
-                        <video id="videoPlayer" class="hidden" controls></video>
-                    </div>
-                    
                     <div class="video-info">
                         <h4 id="videoTitle">Название видео</h4>
                         <div class="video-meta">
                             <div class="meta-item">
-                                <span class="meta-label">Длительность:</span>
-                                <span id="videoDuration" class="meta-value">--:--</span>
+                                <span class="meta-label">Платформа:</span>
+                                <span id="videoPlatform" class="meta-value">TikTok</span>
                             </div>
                             <div class="meta-item">
-                                <span class="meta-label">Качество:</span>
-                                <span id="videoQuality" class="meta-value">HD</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">Размер:</span>
-                                <span id="videoSize" class="meta-value">-- MB</span>
+                                <span class="meta-label">Без водяных знаков:</span>
+                                <span class="meta-value success">✅ Да</span>
                             </div>
                         </div>
                     </div>
@@ -205,7 +170,7 @@
                         </button>
                         <button id="shareBtn" class="final-download-btn secondary">
                             <span class="btn-icon">🔄</span>
-                            Еще видео
+                            Новое видео
                         </button>
                     </div>
                 </div>
@@ -224,29 +189,12 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Support Section -->
-            <section class="support-section">
-                <div class="support-card">
-                    <h3>💡 Нужна помощь?</h3>
-                    <p>Если приложение не работает, попробуйте:</p>
-                    <ul class="support-list">
-                        <li>Проверить подключение к интернету</li>
-                        <li>Обновить страницу</li>
-                        <li>Использовать другую ссылку</li>
-                        <li>Написать в поддержку</li>
-                    </ul>
-                    <button id="supportBtn" class="support-btn">
-                        📧 Написать в поддержку
-                    </button>
-                </div>
-            </section>
         </main>
 
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <p>© 2024 VideoGet • Сделано с ❤️ для Telegram</p>
+                <p>© 2024 TikTokSave • Бесплатное приложение</p>
                 <div class="footer-links">
                     <button class="footer-link" id="privacyBtn">Конфиденциальность</button>
                     <button class="footer-link" id="termsBtn">Условия</button>
@@ -262,7 +210,7 @@
                     <button class="modal-close" id="closeInfoModal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>VideoGet</strong> - бесплатное приложение для скачивания видео из популярных социальных сетей без водяных знаков.</p>
+                    <p><strong>TikTokSave</strong> - бесплатное приложение для скачивания видео из популярных социальных сетей без водяных знаков.</p>
                     
                     <div class="feature-list">
                         <div class="feature-item">✅ Без водяных знаков</div>
@@ -272,7 +220,7 @@
                         <div class="feature-item">✅ Работает в Telegram</div>
                     </div>
                     
-                    <p class="version">Версия: 1.0.0</p>
+                    <p class="disclaimer">⚠️ Используйте только для личных целей. Соблюдайте авторские права.</p>
                 </div>
             </div>
         </div>
@@ -305,14 +253,6 @@
             <div class="notification-content">
                 <span id="notificationText"></span>
                 <button id="closeNotification" class="notification-close">×</button>
-            </div>
-        </div>
-
-        <!-- Loading Overlay -->
-        <div id="loadingOverlay" class="loading-overlay hidden">
-            <div class="loading-content">
-                <div class="loading-spinner-large"></div>
-                <p id="loadingText">Обрабатываем видео...</p>
             </div>
         </div>
     </div>
