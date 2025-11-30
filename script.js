@@ -107,14 +107,6 @@ class TikTokSave {
             this.hideModals();
         });
 
-        document.getElementById('closePrivacyModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closeTermsModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
         // Notification close
         document.getElementById('closeNotification').addEventListener('click', () => {
             this.hideNotification();
@@ -377,24 +369,40 @@ class TikTokSave {
     displayResults(videoInfo) {
         this.currentVideo = videoInfo;
 
-        document.getElementById('videoTitle').textContent = videoInfo.title;
-        document.getElementById('videoPlatform').textContent = this.getPlatformName(videoInfo.platform);
-        document.getElementById('videoDuration').textContent = videoInfo.duration;
-        document.getElementById('videoSize').textContent = `${videoInfo.size} MB`;
+        // Безопасное обновление элементов
+        this.safeSetTextContent('videoTitle', videoInfo.title);
+        this.safeSetTextContent('videoPlatform', this.getPlatformName(videoInfo.platform));
+        this.safeSetTextContent('videoDuration', videoInfo.duration);
+        this.safeSetTextContent('videoSize', `${videoInfo.size} MB`);
 
         const resultsSection = document.getElementById('resultsSection');
-        resultsSection.classList.remove('hidden');
-        
-        setTimeout(() => {
-            resultsSection.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }, 100);
+        if (resultsSection) {
+            resultsSection.classList.remove('hidden');
+            
+            setTimeout(() => {
+                resultsSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+    }
+
+    // Безопасная установка textContent
+    safeSetTextContent(elementId, text) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = text;
+        } else {
+            console.warn(`Element with id '${elementId}' not found`);
+        }
     }
 
     hideResults() {
-        document.getElementById('resultsSection').classList.add('hidden');
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) {
+            resultsSection.classList.add('hidden');
+        }
     }
 
     async downloadVideo() {
@@ -488,6 +496,8 @@ class TikTokSave {
         const history = this.getHistory();
         const historyList = document.getElementById('historyList');
         
+        if (!historyList) return;
+        
         if (history.length === 0) {
             historyList.innerHTML = `
                 <div class="empty-state">
@@ -543,25 +553,29 @@ class TikTokSave {
 
     setLoading(loading) {
         const btn = document.getElementById('downloadBtn');
+        if (!btn) return;
+        
         const btnText = btn.querySelector('.btn-text');
         const spinner = btn.querySelector('.loading-spinner');
         
         if (loading) {
             this.isProcessing = true;
             btn.disabled = true;
-            btnText.textContent = 'Обработка...';
-            spinner.classList.remove('hidden');
+            if (btnText) btnText.textContent = 'Обработка...';
+            if (spinner) spinner.classList.remove('hidden');
         } else {
             this.isProcessing = false;
             btn.disabled = false;
-            btnText.textContent = 'Скачать видео';
-            spinner.classList.add('hidden');
+            if (btnText) btnText.textContent = 'Скачать видео';
+            if (spinner) spinner.classList.add('hidden');
         }
     }
 
     showNotification(message, type = 'success') {
         const notification = document.getElementById('notification');
         const text = document.getElementById('notificationText');
+        
+        if (!notification || !text) return;
         
         text.textContent = message;
         notification.className = `notification ${type}`;
@@ -573,23 +587,38 @@ class TikTokSave {
     }
 
     hideNotification() {
-        document.getElementById('notification').classList.add('hidden');
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.classList.add('hidden');
+        }
     }
 
     showInfoModal() {
-        document.getElementById('infoModal').classList.remove('hidden');
+        const modal = document.getElementById('infoModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
     }
 
     showFormatModal() {
-        document.getElementById('formatModal').classList.remove('hidden');
+        const modal = document.getElementById('formatModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
     }
 
     showPrivacyModal() {
-        document.getElementById('privacyModal').classList.remove('hidden');
+        const modal = document.getElementById('privacyModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
     }
 
     showTermsModal() {
-        document.getElementById('termsModal').classList.remove('hidden');
+        const modal = document.getElementById('termsModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
     }
 
     hideModals() {
@@ -604,7 +633,12 @@ class TikTokSave {
         const toggleBtn = document.getElementById('themeToggle');
         
         document.documentElement.setAttribute('data-theme', newTheme);
-        toggleBtn.querySelector('.theme-icon').textContent = newTheme === 'light' ? '🌙' : '☀️';
+        if (toggleBtn) {
+            const themeIcon = toggleBtn.querySelector('.theme-icon');
+            if (themeIcon) {
+                themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            }
+        }
         
         localStorage.setItem('theme', newTheme);
     }
@@ -614,7 +648,12 @@ class TikTokSave {
         const toggleBtn = document.getElementById('themeToggle');
         
         document.documentElement.setAttribute('data-theme', savedTheme);
-        toggleBtn.querySelector('.theme-icon').textContent = savedTheme === 'light' ? '🌙' : '☀️';
+        if (toggleBtn) {
+            const themeIcon = toggleBtn.querySelector('.theme-icon');
+            if (themeIcon) {
+                themeIcon.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+            }
+        }
     }
 
     escapeHtml(unsafe) {
