@@ -107,6 +107,14 @@ class TikTokSave {
             this.hideModals();
         });
 
+        document.getElementById('closePrivacyModal').addEventListener('click', () => {
+            this.hideModals();
+        });
+
+        document.getElementById('closeTermsModal').addEventListener('click', () => {
+            this.hideModals();
+        });
+
         // Notification close
         document.getElementById('closeNotification').addEventListener('click', () => {
             this.hideNotification();
