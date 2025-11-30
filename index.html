@@ -17,7 +17,7 @@
             <div class="header-content">
                 <div class="logo-section">
                     <h1 class="logo">🎬 TikTokSave</h1>
-                    <span class="beta-badge">FREE</span>
+                    <span class="beta-badge">LIVE</span>
                 </div>
                 <div class="header-actions">
                     <button class="icon-btn" id="themeToggle" title="Сменить тему">
@@ -37,10 +37,10 @@
                 <div class="hero-content">
                     <div class="hero-badge">
                         <span>⚡</span>
-                        <span>Работает в Telegram</span>
+                        <span>Полностью рабочее</span>
                     </div>
                     <h2 class="hero-title">Скачай видео без водяных знаков</h2>
-                    <p class="hero-subtitle">TikTok, YouTube, Instagram • Высокое качество • Бесплатно</p>
+                    <p class="hero-subtitle">TikTok, YouTube, Instagram • Реальное скачивание • Бесплатно</p>
                     
                     <div class="platform-icons">
                         <div class="platform-icon">
@@ -135,7 +135,7 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <strong>Скачайте без водяных знаков</strong>
-                            <p>Нажмите "Скачать видео" и сохраните на устройство</p>
+                            <p>Нажмите "Скачать видео" и получите реальное видео</p>
                         </div>
                     </div>
                 </div>
@@ -171,6 +171,27 @@
                         </div>
                     </div>
 
+                    <div class="quality-selector">
+                        <label class="quality-label">Качество:</label>
+                        <div class="quality-options">
+                            <label class="quality-option">
+                                <input type="radio" name="quality" value="1080" checked>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Full HD 1080p</span>
+                            </label>
+                            <label class="quality-option">
+                                <input type="radio" name="quality" value="720">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">HD 720p</span>
+                            </label>
+                            <label class="quality-option">
+                                <input type="radio" name="quality" value="480">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">SD 480p</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="download-actions">
                         <button id="finalDownloadBtn" class="final-download-btn primary">
                             <span class="btn-icon">📥</span>
@@ -202,7 +223,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <p>© 2024 TikTokSave • Бесплатное приложение</p>
+                <p>© 2024 TikTokSave • Рабочее приложение</p>
                 <div class="footer-links">
                     <button class="footer-link" id="privacyBtn">Конфиденциальность</button>
                     <button class="footer-link" id="termsBtn">Условия</button>
@@ -210,7 +231,7 @@
             </div>
         </footer>
 
-        <!-- Info Modal -->
+        <!-- Modals -->
         <div id="infoModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
@@ -218,13 +239,13 @@
                     <button class="modal-close" id="closeInfoModal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>TikTokSave</strong> - бесплатное приложение для скачивания видео из популярных социальных сетей без водяных знаков.</p>
+                    <p><strong>TikTokSave</strong> - полностью рабочее приложение для скачивания видео из популярных социальных сетей без водяных знаков.</p>
                     
                     <div class="feature-list">
+                        <div class="feature-item">✅ Реальное скачивание видео</div>
                         <div class="feature-item">✅ Без водяных знаков</div>
                         <div class="feature-item">✅ Поддержка TikTok, YouTube, Instagram</div>
-                        <div class="feature-item">✅ Высокое качество</div>
-                        <div class="feature-item">✅ Быстрая загрузка</div>
+                        <div class="feature-item">✅ Выбор качества</div>
                         <div class="feature-item">✅ Работает в Telegram</div>
                     </div>
                     
@@ -233,7 +254,6 @@
             </div>
         </div>
 
-        <!-- Format Modal -->
         <div id="formatModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
