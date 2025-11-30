@@ -1,3 +1,258 @@
+/* Download Instructions Modal */
+.download-steps {
+    margin: 1.5rem 0;
+}
+
+.download-steps .step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+}
+
+.download-steps .step-number {
+    background: var(--accent-color);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.download-steps .step-content strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.download-steps .step-content p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Download Options */
+.download-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.download-option-btn {
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.download-option-btn.primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.download-option-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.download-option-btn.success {
+    background: var(--success);
+    color: white;
+}
+
+.download-option-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* Mobile Tips */
+.mobile-tips {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-top: 1.5rem;
+}
+
+.mobile-tips h4 {
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.mobile-tips ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.mobile-tips li {
+    margin-bottom: 0.5rem;
+}
+
+/* Download Link */
+.download-link {
+    display: block;
+    padding: 1.25rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-align: center;
+    margin: 1.5rem 0;
+    transition: var(--transition);
+    font-size: 1.1rem;
+}
+
+.download-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Platform-specific badges */
+.platform-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+/* Enhanced Results Section */
+.video-preview {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.video-preview video {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    background: #000;
+}
+
+.download-methods {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.download-method {
+    flex: 1;
+    min-width: 120px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.download-method:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-color);
+}
+
+.download-method-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.download-method-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.download-method-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: block;
+}
+
+/* Responsive Design for Download Options */
+@media (max-width: 768px) {
+    .download-options {
+        gap: 0.5rem;
+    }
+    
+    .download-option-btn {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .download-methods {
+        flex-direction: column;
+    }
+    
+    .download-method {
+        min-width: auto;
+    }
+    
+    .download-steps .step {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .download-steps .step-number {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+        align-self: center;
+    }
+}
+
+/* Success Animation */
+@keyframes downloadSuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.download-success {
+    animation: downloadSuccess 0.5s ease;
+}
+
+/* Loading States */
+.download-loading {
+    position: relative;
+    opacity: 0.7;
+}
+
+.download-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
 /* Download Methods */
 .download-methods {
     display: flex;
