@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader • TikTok Style</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🎬 VideoGet</h1>
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h2 class="hero-title">Скачай любое видео</h2>
+                    <p class="hero-subtitle">Без водяных знаков • Высокое качество • Мгновенно</p>
+                </div>
+            </section>
+
+            <!-- URL Input -->
+            <section class="input-section">
+                <div class="input-container">
+                    <div class="platform-tabs">
+                        <button class="platform-tab active" data-platform="all">Все</button>
+                        <button class="platform-tab" data-platform="tiktok">TikTok</button>
+                        <button class="platform-tab" data-platform="youtube">YouTube</button>
+                        <button class="platform-tab" data-platform="instagram">Instagram</button>
+                    </div>
+                    
+                    <div class="url-input-group">
+                        <input 
+                            type="text" 
+                            id="videoUrl" 
+                            placeholder="Вставьте ссылку на видео..." 
+                            class="url-input"
+                        >
+                        <button id="pasteButton" class="paste-btn">📋</button>
+                    </div>
+                    
+                    <button id="downloadBtn" class="download-btn">
+                        <span class="btn-text">Скачать видео</span>
+                        <div class="loading-spinner hidden">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="features">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚫</div>
+                        <h3>Без водяных знаков</h3>
+                        <p>Чистое видео без логотипов</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Мгновенная загрузка</h3>
+                        <p>Быстрее, чем в официальных приложениях</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Простой интерфейс</h3>
+                        <p>Скачивание в один клик</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results -->
+            <section id="resultsSection" class="results-section hidden">
+                <div class="result-card">
+                    <div class="video-preview" id="videoPreview">
+                        <div class="preview-placeholder">
+                            <span>🎥</span>
+                            <p>Предпросмотр видео</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-info">
+                        <h4 id="videoTitle">Название видео</h4>
+                        <div class="video-meta">
+                            <span id="videoDuration">--:--</span>
+                            <span id="videoQuality">HD</span>
+                            <span id="videoSize">-- MB</span>
+                        </div>
+                    </div>
+
+                    <div class="download-options">
+                        <label class="quality-option">
+                            <input type="radio" name="quality" value="720" checked>
+                            <span class="radio-label">HD 720p</span>
+                        </label>
+                        <label class="quality-option">
+                            <input type="radio" name="quality" value="480">
+                            <span class="radio-label">SD 480p</span>
+                        </label>
+                        <label class="quality-option">
+                            <input type="radio" name="quality" value="360">
+                            <span class="radio-label">Low 360p</span>
+                        </label>
+                    </div>
+
+                    <button id="finalDownloadBtn" class="final-download-btn">
+                        📥 Скачать сейчас
+                    </button>
+                </div>
+            </section>
+
+            <!-- History -->
+            <section class="history-section">
+                <div class="section-header">
+                    <h3>Последние загрузки</h3>
+                    <button id="clearHistory" class="clear-btn">Очистить</button>
+                </div>
+                <div id="historyList" class="history-list">
+                    <!-- History items will be added here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 VideoGet • Сделано с ❤️ для Telegram</p>
+        </footer>
+
+        <!-- Notifications -->
+        <div id="notification" class="notification hidden">
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
