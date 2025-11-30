@@ -1,691 +1,317 @@
-class TikTokSave {
-    constructor() {
-        this.telegram = window.Telegram?.WebApp;
-        this.currentVideo = null;
-        this.isProcessing = false;
-        this.init();
-    }
-
-    init() {
-        this.initializeTelegram();
-        this.bindEvents();
-        this.loadHistory();
-        this.applyTheme();
-        console.log('🎬 TikTokSave initialized');
-    }
-
-    initializeTelegram() {
-        if (!this.telegram) {
-            console.log('ℹ️ Running outside Telegram');
-            return;
-        }
-
-        try {
-            this.telegram.expand();
-            this.telegram.enableClosingConfirmation();
-            this.telegram.setHeaderColor('#000000');
-            this.telegram.setBackgroundColor('#000000');
-            console.log('✅ Telegram Web App initialized');
-        } catch (error) {
-            console.error('❌ Telegram init error:', error);
-        }
-    }
-
-    bindEvents() {
-        // Platform tabs
-        document.querySelectorAll('.platform-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                this.switchPlatform(e.currentTarget);
-            });
-        });
-
-        // Paste button
-        document.getElementById('pasteButton').addEventListener('click', () => {
-            this.pasteFromClipboard();
-        });
-
-        // Clear button
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            this.clearInput();
-        });
-
-        // Download button
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            this.processVideo();
-        });
-
-        // Final download button
-        document.getElementById('finalDownloadBtn').addEventListener('click', () => {
-            this.downloadVideo();
-        });
-
-        // Share button
-        document.getElementById('shareBtn').addEventListener('click', () => {
-            this.shareVideo();
-        });
-
-        // Close results
-        document.getElementById('closeResults').addEventListener('click', () => {
-            this.hideResults();
-        });
-
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            this.toggleTheme();
-        });
-
-        // Info button
-        document.getElementById('infoBtn').addEventListener('click', () => {
-            this.showInfoModal();
-        });
-
-        // Format help
-        document.getElementById('formatHelp').addEventListener('click', () => {
-            this.showFormatModal();
-        });
-
-        // Clear history
-        document.getElementById('clearHistory').addEventListener('click', () => {
-            this.clearHistory();
-        });
-
-        // Privacy and Terms buttons
-        document.getElementById('privacyBtn').addEventListener('click', () => {
-            this.showPrivacyModal();
-        });
-
-        document.getElementById('termsBtn').addEventListener('click', () => {
-            this.showTermsModal();
-        });
-
-        // Modal close buttons
-        document.getElementById('closeInfoModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closeFormatModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closePrivacyModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closeTermsModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        // Notification close
-        document.getElementById('closeNotification').addEventListener('click', () => {
-            this.hideNotification();
-        });
-
-        // URL input events
-        const urlInput = document.getElementById('videoUrl');
-        urlInput.addEventListener('input', () => {
-            this.validateUrl();
-        });
-
-        urlInput.addEventListener('paste', (e) => {
-            setTimeout(() => this.validateUrl(), 100);
-        });
-
-        // Close modals on backdrop click
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.hideModals();
-                }
-            });
-        });
-
-        // Escape key to close modals
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.hideModals();
-                this.hideNotification();
-            }
-        });
-
-        console.log('✅ All events bound');
-    }
-
-    switchPlatform(tab) {
-        document.querySelectorAll('.platform-tab').forEach(t => {
-            t.classList.remove('active');
-        });
-        tab.classList.add('active');
-        
-        const platform = tab.dataset.platform;
-        this.updatePlaceholder(platform);
-        this.validateUrl();
-    }
-
-    updatePlaceholder(platform) {
-        const input = document.getElementById('videoUrl');
-        const placeholders = {
-            'all': 'https://vt.tiktok.com/... или https://tiktok.com/...',
-            'tiktok': 'https://vt.tiktok.com/ZSfV2hRgW/ или https://tiktok.com/@user/video/123',
-            'youtube': 'https://www.youtube.com/watch?v=ABCDEFGHIJK',
-            'instagram': 'https://www.instagram.com/reel/ABC123DEF/'
-        };
-        
-        input.placeholder = placeholders[platform] || placeholders.all;
-    }
-
-    async pasteFromClipboard() {
-        try {
-            const text = await navigator.clipboard.readText();
-            document.getElementById('videoUrl').value = text;
-            this.showNotification('📋 Ссылка вставлена из буфера');
-            this.validateUrl();
-        } catch (error) {
-            this.showNotification('❌ Не удалось получить доступ к буферу', 'error');
-            document.getElementById('videoUrl').focus();
-        }
-    }
-
-    clearInput() {
-        document.getElementById('videoUrl').value = '';
-        this.validateUrl();
-    }
-
-    validateUrl() {
-        const url = document.getElementById('videoUrl').value.trim();
-        const btn = document.getElementById('downloadBtn');
-        
-        if (!url) {
-            btn.disabled = true;
-            return false;
-        }
-
-        const isValid = this.isValidUrl(url);
-        btn.disabled = !isValid;
-        
-        return isValid;
-    }
-
-    isValidUrl(url) {
-        // Расширенные паттерны для TikTok
-        const tiktokPatterns = [
-            /tiktok\.com\/.*\/video\/\d+/, // Полные ссылки
-            /vt\.tiktok\.com\/[A-Za-z0-9]+\//, // Короткие ссылки vt.tiktok.com
-            /vm\.tiktok\.com\/[A-Za-z0-9]+\//, // Короткие ссылки vm.tiktok.com
-            /www\.tiktok\.com\/@[^/]+\/video\/\d+/, // Ссылки с username
-        ];
-
-        // Паттерны для других платформ
-        const patterns = {
-            youtube: [
-                /youtube\.com\/watch\?v=[\w-]+/,
-                /youtu\.be\/[\w-]+/
-            ],
-            instagram: [
-                /instagram\.com\/(p|reel|tv)\/[\w-]+/,
-                /instagr\.am\/(p|reel|tv)\/[\w-]+/
-            ]
-        };
-
-        // Проверяем TikTok ссылки
-        const isTikTok = tiktokPatterns.some(pattern => pattern.test(url));
-        if (isTikTok) return true;
-
-        // Проверяем другие платформы
-        for (const platform in patterns) {
-            if (patterns[platform].some(pattern => pattern.test(url))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    detectPlatform(url) {
-        const tiktokPatterns = [
-            /tiktok\.com/,
-            /vt\.tiktok\.com/,
-            /vm\.tiktok\.com/
-        ];
-
-        const youtubePatterns = [
-            /youtube\.com/,
-            /youtu\.be/
-        ];
-
-        const instagramPatterns = [
-            /instagram\.com/,
-            /instagr\.am/
-        ];
-
-        if (tiktokPatterns.some(pattern => pattern.test(url))) return 'tiktok';
-        if (youtubePatterns.some(pattern => pattern.test(url))) return 'youtube';
-        if (instagramPatterns.some(pattern => pattern.test(url))) return 'instagram';
-        
-        return 'unknown';
-    }
-
-    getPlatformName(platform) {
-        const names = {
-            'tiktok': 'TikTok',
-            'youtube': 'YouTube', 
-            'instagram': 'Instagram'
-        };
-        return names[platform] || 'Видео';
-    }
-
-    async processVideo() {
-        if (this.isProcessing) return;
-        
-        const url = document.getElementById('videoUrl').value.trim();
-        
-        if (!url) {
-            this.showNotification('❌ Введите ссылку на видео', 'error');
-            return;
-        }
-
-        if (!this.isValidUrl(url)) {
-            this.showNotification('❌ Неверный формат ссылки', 'error');
-            return;
-        }
-
-        const platform = this.detectPlatform(url);
-        if (platform === 'unknown') {
-            this.showNotification('❌ Неподдерживаемая платформа', 'error');
-            return;
-        }
-
-        this.isProcessing = true;
-        this.setLoading(true);
-
-        try {
-            // Эмуляция обработки видео
-            await this.simulateVideoProcessing(url);
-            const videoInfo = this.generateVideoInfo(url, platform);
-            this.displayResults(videoInfo);
-            this.showNotification('✅ Видео готово к скачиванию');
-        } catch (error) {
-            console.error('Process error:', error);
-            this.showNotification(`❌ Ошибка: ${error.message}`, 'error');
-        } finally {
-            this.isProcessing = false;
-            this.setLoading(false);
-        }
-    }
-
-    async simulateVideoProcessing(url) {
-        // Добавляем случайную задержку для реалистичности
-        const delay = Math.random() * 2000 + 1000; // 1-3 секунды
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, delay);
-        });
-    }
-
-    generateVideoInfo(url, platform) {
-        const titles = {
-            tiktok: [
-                'Трендовый танец TikTok 🕺',
-                'Смешное видео с котиком 😹',
-                'Лайфхак который изменит всё 💡',
-                'Момент из жизни ✨',
-                'Креативное видео 🎨'
-            ],
-            youtube: [
-                'Обзор нового смартфона 📱',
-                'Музыкальный клип 2024 🎵',
-                'Обучение программированию 💻',
-                'Кулинарный рецепт 🍳',
-                'Путешествия по миру ✈️'
-            ],
-            instagram: [
-                'Красивый Reel с отпуска 🌴',
-                'Рецепт вкусного блюда 🍝',
-                'Тренды моды 2024 👗',
-                'Тренировка в зале 💪',
-                'Уютный вечер дома 🏠'
-            ]
-        };
-
-        const platformTitles = titles[platform] || titles.tiktok;
-        const randomTitle = platformTitles[Math.floor(Math.random() * platformTitles.length)];
-
-        return {
-            title: randomTitle,
-            platform: platform,
-            url: url,
-            noWatermark: true,
-            duration: this.generateRandomDuration(),
-            size: this.generateRandomSize()
-        };
-    }
-
-    generateRandomDuration() {
-        const minutes = Math.floor(Math.random() * 3);
-        const seconds = Math.floor(Math.random() * 60);
-        if (minutes === 0) {
-            return `${seconds} сек`;
-        }
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    generateRandomSize() {
-        const sizes = [2.3, 5.7, 8.1, 12.4, 15.8, 19.2, 23.5, 27.9];
-        return sizes[Math.floor(Math.random() * sizes.length)];
-    }
-
-    displayResults(videoInfo) {
-        this.currentVideo = videoInfo;
-
-        // Безопасное обновление элементов
-        this.safeSetTextContent('videoTitle', videoInfo.title);
-        this.safeSetTextContent('videoPlatform', this.getPlatformName(videoInfo.platform));
-        this.safeSetTextContent('videoDuration', videoInfo.duration);
-        this.safeSetTextContent('videoSize', `${videoInfo.size} MB`);
-
-        const resultsSection = document.getElementById('resultsSection');
-        if (resultsSection) {
-            resultsSection.classList.remove('hidden');
-            
-            setTimeout(() => {
-                resultsSection.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }, 100);
-        }
-    }
-
-    // Безопасная установка textContent
-    safeSetTextContent(elementId, text) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.textContent = text;
-        } else {
-            console.warn(`Element with id '${elementId}' not found`);
-        }
-    }
-
-    hideResults() {
-        const resultsSection = document.getElementById('resultsSection');
-        if (resultsSection) {
-            resultsSection.classList.add('hidden');
-        }
-    }
-
-    async downloadVideo() {
-        if (!this.currentVideo) return;
-        
-        try {
-            this.showNotification('⏳ Начинаем скачивание...');
-            
-            // Эмуляция скачивания
-            await this.simulateDownload();
-            
-            // Создаем демо-файл для скачивания
-            this.createDemoDownload();
-            
-            this.saveToHistory(this.currentVideo);
-            this.showNotification('✅ Видео успешно скачано!');
-            
-        } catch (error) {
-            console.error('Download error:', error);
-            this.showNotification('❌ Ошибка при скачивании', 'error');
-        }
-    }
-
-    async simulateDownload() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 1500);
-        });
-    }
-
-    createDemoDownload() {
-        const platform = this.currentVideo.platform;
-        const content = `Это демо-файл. В реальном приложении здесь будет ваше видео с ${this.getPlatformName(platform)} без водяных знаков.\n\nСсылка: ${this.currentVideo.url}`;
-        const blob = new Blob([content], { type: 'video/mp4' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = this.sanitizeFilename(`${this.currentVideo.title} - ${this.getPlatformName(this.currentVideo.platform)}`) + '.mp4';
-        a.style.display = 'none';
-        
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-
-    sanitizeFilename(filename) {
-        return filename.replace(/[^a-zA-Z0-9а-яА-Я\s\-_]/g, '').trim() || 'video';
-    }
-
-    shareVideo() {
-        this.hideResults();
-        document.getElementById('videoUrl').value = '';
-        document.getElementById('videoUrl').focus();
-        this.showNotification('🔄 Готово для новой ссылки');
-    }
-
-    saveToHistory(videoInfo) {
-        const history = this.getHistory();
-        const historyItem = {
-            id: Date.now(),
-            title: videoInfo.title,
-            url: videoInfo.url,
-            platform: videoInfo.platform,
-            date: new Date().toISOString(),
-            size: videoInfo.size,
-            duration: videoInfo.duration
-        };
-        
-        history.unshift(historyItem);
-        if (history.length > 10) {
-            history.pop();
-        }
-        
-        localStorage.setItem('tiktoksave_history', JSON.stringify(history));
-        this.loadHistory();
-    }
-
-    getHistory() {
-        try {
-            return JSON.parse(localStorage.getItem('tiktoksave_history') || '[]');
-        } catch {
-            return [];
-        }
-    }
-
-    loadHistory() {
-        const history = this.getHistory();
-        const historyList = document.getElementById('historyList');
-        
-        if (!historyList) return;
-        
-        if (history.length === 0) {
-            historyList.innerHTML = `
-                <div class="empty-state">
-                    <span>📺</span>
-                    <p>Здесь появятся ваши последние загрузки</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTokSave • Скачать видео без водяных знаков</title>
+    <meta name="description" content="Скачивайте видео из TikTok, YouTube, Instagram без водяных знаков">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="assets/icon-192.png">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo">🎬 TikTokSave</h1>
+                    <span class="beta-badge">FREE</span>
                 </div>
-            `;
-            return;
-        }
-        
-        historyList.innerHTML = history.map(item => `
-            <div class="history-item fade-in">
-                <div class="history-info">
-                    <div class="history-title">${this.escapeHtml(item.title)}</div>
-                    <div class="history-meta">
-                        <span>${new Date(item.date).toLocaleDateString()}</span>
-                        <span>•</span>
-                        <span>${this.getPlatformIcon(item.platform)} ${this.getPlatformName(item.platform)}</span>
-                        <span>•</span>
-                        <span>${item.size} MB</span>
-                    </div>
-                </div>
-                <div class="history-actions">
-                    <button class="history-download" onclick="app.redownload('${this.escapeHtml(item.url)}')" title="Скачать снова">
-                        📥
+                <div class="header-actions">
+                    <button class="icon-btn" id="themeToggle" title="Сменить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="icon-btn" id="infoBtn" title="Информация">
+                        ℹ️
                     </button>
                 </div>
             </div>
-        `).join('');
-    }
+        </header>
 
-    getPlatformIcon(platform) {
-        const icons = {
-            tiktok: '🎵',
-            youtube: '📺',
-            instagram: '📷'
-        };
-        return icons[platform] || '🌐';
-    }
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span>⚡</span>
+                        <span>Работает в Telegram</span>
+                    </div>
+                    <h2 class="hero-title">Скачай видео без водяных знаков</h2>
+                    <p class="hero-subtitle">TikTok, YouTube, Instagram • Высокое качество • Бесплатно</p>
+                    
+                    <div class="platform-icons">
+                        <div class="platform-icon">
+                            <span>🎵</span>
+                            <span>TikTok</span>
+                        </div>
+                        <div class="platform-icon">
+                            <span>📺</span>
+                            <span>YouTube</span>
+                        </div>
+                        <div class="platform-icon">
+                            <span>📷</span>
+                            <span>Instagram</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-    redownload(url) {
-        document.getElementById('videoUrl').value = url;
-        this.processVideo();
-    }
+            <!-- URL Input Section -->
+            <section class="input-section">
+                <div class="input-container">
+                    <div class="input-header">
+                        <h3>Вставьте ссылку на видео</h3>
+                        <button class="help-btn" id="formatHelp">?</button>
+                    </div>
+                    
+                    <div class="platform-tabs">
+                        <button class="platform-tab active" data-platform="all">
+                            <span>🌐</span>
+                            Все
+                        </button>
+                        <button class="platform-tab" data-platform="tiktok">
+                            <span>🎵</span>
+                            TikTok
+                        </button>
+                        <button class="platform-tab" data-platform="youtube">
+                            <span>📺</span>
+                            YouTube
+                        </button>
+                        <button class="platform-tab" data-platform="instagram">
+                            <span>📷</span>
+                            Instagram
+                        </button>
+                    </div>
+                    
+                    <div class="url-input-group">
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="videoUrl" 
+                                placeholder="https://vt.tiktok.com/..." 
+                                class="url-input"
+                                autocomplete="off"
+                            >
+                            <button id="clearBtn" class="clear-btn" title="Очистить">×</button>
+                        </div>
+                        <button id="pasteButton" class="paste-btn">
+                            <span>📋</span>
+                            Вставить
+                        </button>
+                    </div>
+                    
+                    <button id="downloadBtn" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        <span class="btn-text">Скачать видео</span>
+                        <div class="loading-spinner hidden">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </div>
+            </section>
 
-    clearHistory() {
-        if (confirm('Очистить всю историю загрузок?')) {
-            localStorage.removeItem('tiktoksave_history');
-            this.loadHistory();
-            this.showNotification('🗑️ История очищена');
-        }
-    }
+            <!-- How It Works -->
+            <section class="instructions">
+                <h3>Как это работает:</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>Скопируйте ссылку</strong>
+                            <p>Найдите видео и нажмите "Поделиться" → "Копировать ссылку"</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>Вставьте в это приложение</strong>
+                            <p>Нажмите "Вставить" или вставьте ссылку вручную</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>Скачайте без водяных знаков</strong>
+                            <p>Нажмите "Скачать видео" и сохраните на устройство</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-    setLoading(loading) {
-        const btn = document.getElementById('downloadBtn');
-        if (!btn) return;
-        
-        const btnText = btn.querySelector('.btn-text');
-        const spinner = btn.querySelector('.loading-spinner');
-        
-        if (loading) {
-            this.isProcessing = true;
-            btn.disabled = true;
-            if (btnText) btnText.textContent = 'Обработка...';
-            if (spinner) spinner.classList.remove('hidden');
-        } else {
-            this.isProcessing = false;
-            btn.disabled = false;
-            if (btnText) btnText.textContent = 'Скачать видео';
-            if (spinner) spinner.classList.add('hidden');
-        }
-    }
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3>✅ Видео готово!</h3>
+                        <button id="closeResults" class="close-btn">×</button>
+                    </div>
+                    
+                    <div class="video-info">
+                        <h4 id="videoTitle">Название видео</h4>
+                        <div class="video-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Платформа:</span>
+                                <span id="videoPlatform" class="meta-value">TikTok</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Длительность:</span>
+                                <span id="videoDuration" class="meta-value">--:--</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Размер:</span>
+                                <span id="videoSize" class="meta-value">-- MB</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Без водяных знаков:</span>
+                                <span class="meta-value success">✅ Да</span>
+                            </div>
+                        </div>
+                    </div>
 
-    showNotification(message, type = 'success') {
-        const notification = document.getElementById('notification');
-        const text = document.getElementById('notificationText');
-        
-        if (!notification || !text) return;
-        
-        text.textContent = message;
-        notification.className = `notification ${type}`;
-        notification.classList.remove('hidden');
-        
-        setTimeout(() => {
-            this.hideNotification();
-        }, 4000);
-    }
+                    <div class="download-actions">
+                        <button id="finalDownloadBtn" class="final-download-btn primary">
+                            <span class="btn-icon">📥</span>
+                            Скачать сейчас
+                        </button>
+                        <button id="shareBtn" class="final-download-btn secondary">
+                            <span class="btn-icon">🔄</span>
+                            Новое видео
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-    hideNotification() {
-        const notification = document.getElementById('notification');
-        if (notification) {
-            notification.classList.add('hidden');
-        }
-    }
+            <!-- History Section -->
+            <section class="history-section">
+                <div class="section-header">
+                    <h3>📋 История загрузок</h3>
+                    <button id="clearHistory" class="text-btn">Очистить</button>
+                </div>
+                <div id="historyList" class="history-list">
+                    <div class="empty-state">
+                        <span>📺</span>
+                        <p>Здесь появятся ваши последние загрузки</p>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-    showInfoModal() {
-        const modal = document.getElementById('infoModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>© 2024 TikTokSave • Бесплатное приложение</p>
+                <div class="footer-links">
+                    <button class="footer-link" id="privacyBtn">Конфиденциальность</button>
+                    <button class="footer-link" id="termsBtn">Условия</button>
+                </div>
+            </div>
+        </footer>
 
-    showFormatModal() {
-        const modal = document.getElementById('formatModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
+        <!-- Info Modal -->
+        <div id="infoModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>ℹ️ О приложении</h3>
+                    <button class="modal-close" id="closeInfoModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>TikTokSave</strong> - бесплатное приложение для скачивания видео из популярных социальных сетей без водяных знаков.</p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">✅ Без водяных знаков</div>
+                        <div class="feature-item">✅ Поддержка TikTok, YouTube, Instagram</div>
+                        <div class="feature-item">✅ Высокое качество</div>
+                        <div class="feature-item">✅ Быстрая загрузка</div>
+                        <div class="feature-item">✅ Работает в Telegram</div>
+                    </div>
+                    
+                    <p class="disclaimer">⚠️ Используйте только для личных целей. Соблюдайте авторские права.</p>
+                </div>
+            </div>
+        </div>
 
-    showPrivacyModal() {
-        const modal = document.getElementById('privacyModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
+        <!-- Format Modal -->
+        <div id="formatModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📝 Поддерживаемые ссылки</h3>
+                    <button class="modal-close" id="closeFormatModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="format-example">
+                        <strong>🔗 TikTok (все форматы):</strong>
+                        <code>https://vt.tiktok.com/ZSfV2hRgW/</code>
+                        <code>https://vm.tiktok.com/ZSFvkR5Xy/</code>
+                        <code>https://www.tiktok.com/@username/video/123456789</code>
+                    </div>
+                    <div class="format-example">
+                        <strong>📺 YouTube:</strong>
+                        <code>https://www.youtube.com/watch?v=ABCDEFGHIJK</code>
+                        <code>https://youtu.be/ABCDEFGHIJK</code>
+                    </div>
+                    <div class="format-example">
+                        <strong>📷 Instagram:</strong>
+                        <code>https://www.instagram.com/reel/ABC123DEF/</code>
+                        <code>https://www.instagram.com/p/ABC123DEF/</code>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    showTermsModal() {
-        const modal = document.getElementById('termsModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
+        <!-- Privacy Modal -->
+        <div id="privacyModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔒 Конфиденциальность</h3>
+                    <button class="modal-close" id="closePrivacyModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Политика конфиденциальности TikTokSave</strong></p>
+                    <p>Мы ценим вашу конфиденциальность. Приложение:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>Не собирает личные данные</li>
+                        <li>Не хранит историю на серверах</li>
+                        <li>Работает полностью в вашем браузере</li>
+                        <li>Использует локальное хранилище для истории загрузок</li>
+                    </ul>
+                    <p>Вся история хранится только на вашем устройстве и может быть удалена в любой момент.</p>
+                </div>
+            </div>
+        </div>
 
-    hideModals() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.classList.add('hidden');
-        });
-    }
+        <!-- Terms Modal -->
+        <div id="termsModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📝 Условия использования</h3>
+                    <button class="modal-close" id="closeTermsModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Условия использования TikTokSave</strong></p>
+                    <p>Используя это приложение, вы соглашаетесь с:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>Использованием только в личных целях</li>
+                        <li>Соблюдением авторских прав</li>
+                        <li>Ответственностью за контент который вы скачиваете</li>
+                        <li>Тем что приложение предоставляется "как есть"</li>
+                    </ul>
+                    <p class="disclaimer">⚠️ Приложение предназначено для легального использования. Соблюдайте законы вашей страны.</p>
+                </div>
+            </div>
+        </div>
 
-    toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        const toggleBtn = document.getElementById('themeToggle');
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        if (toggleBtn) {
-            const themeIcon = toggleBtn.querySelector('.theme-icon');
-            if (themeIcon) {
-                themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
-            }
-        }
-        
-        localStorage.setItem('theme', newTheme);
-    }
+        <!-- Notification -->
+        <div id="notification" class="notification hidden">
+            <div class="notification-content">
+                <span id="notificationText"></span>
+                <button id="closeNotification" class="notification-close">×</button>
+            </div>
+        </div>
+    </div>
 
-    applyTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        const toggleBtn = document.getElementById('themeToggle');
-        
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        if (toggleBtn) {
-            const themeIcon = toggleBtn.querySelector('.theme-icon');
-            if (themeIcon) {
-                themeIcon.textContent = savedTheme === 'light' ? '🌙' : '☀️';
-            }
-        }
-    }
-
-    escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-}
-
-// Инициализация приложения
-let app;
-
-document.addEventListener('DOMContentLoaded', function() {
-    app = new TikTokSave();
-});
-
-// Обработка ошибок
-window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
-});
-
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled promise rejection:', e.reason);
-});
+    <script src="script.js"></script>
+</body>
+</html>
