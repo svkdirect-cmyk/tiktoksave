@@ -1,0 +1,23 @@
+{
+    "name": "VideoGet - Скачать видео без водяных знаков",
+    "short_name": "VideoGet",
+    "description": "Скачивайте видео из TikTok, YouTube, Instagram без водяных знаков",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#ff0050",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "categories": ["entertainment", "social", "utilities"]
+}
