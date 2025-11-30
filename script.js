@@ -89,12 +89,29 @@ class TikTokSave {
             this.clearHistory();
         });
 
+        // Privacy and Terms buttons
+        document.getElementById('privacyBtn').addEventListener('click', () => {
+            this.showPrivacyModal();
+        });
+
+        document.getElementById('termsBtn').addEventListener('click', () => {
+            this.showTermsModal();
+        });
+
         // Modal close buttons
         document.getElementById('closeInfoModal').addEventListener('click', () => {
             this.hideModals();
         });
 
         document.getElementById('closeFormatModal').addEventListener('click', () => {
+            this.hideModals();
+        });
+
+        document.getElementById('closePrivacyModal').addEventListener('click', () => {
+            this.hideModals();
+        });
+
+        document.getElementById('closeTermsModal').addEventListener('click', () => {
             this.hideModals();
         });
 
@@ -147,8 +164,8 @@ class TikTokSave {
     updatePlaceholder(platform) {
         const input = document.getElementById('videoUrl');
         const placeholders = {
-            'all': 'https://www.tiktok.com/... или https://youtube.com/...',
-            'tiktok': 'https://www.tiktok.com/@username/video/123456789',
+            'all': 'https://vt.tiktok.com/... или https://tiktok.com/...',
+            'tiktok': 'https://vt.tiktok.com/ZSfV2hRgW/ или https://tiktok.com/@user/video/123',
             'youtube': 'https://www.youtube.com/watch?v=ABCDEFGHIJK',
             'instagram': 'https://www.instagram.com/reel/ABC123DEF/'
         };
@@ -189,19 +206,61 @@ class TikTokSave {
     }
 
     isValidUrl(url) {
+        // Расширенные паттерны для TikTok
+        const tiktokPatterns = [
+            /tiktok\.com\/.*\/video\/\d+/, // Полные ссылки
+            /vt\.tiktok\.com\/[A-Za-z0-9]+\//, // Короткие ссылки vt.tiktok.com
+            /vm\.tiktok\.com\/[A-Za-z0-9]+\//, // Короткие ссылки vm.tiktok.com
+            /www\.tiktok\.com\/@[^/]+\/video\/\d+/, // Ссылки с username
+        ];
+
+        // Паттерны для других платформ
         const patterns = {
-            tiktok: /tiktok\.com\/.*\/video\/\d+/,
-            youtube: /(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/,
-            instagram: /instagram\.com\/(p|reel|tv)\/[\w-]+/
+            youtube: [
+                /youtube\.com\/watch\?v=[\w-]+/,
+                /youtu\.be\/[\w-]+/
+            ],
+            instagram: [
+                /instagram\.com\/(p|reel|tv)\/[\w-]+/,
+                /instagr\.am\/(p|reel|tv)\/[\w-]+/
+            ]
         };
-        
-        return Object.values(patterns).some(pattern => pattern.test(url));
+
+        // Проверяем TikTok ссылки
+        const isTikTok = tiktokPatterns.some(pattern => pattern.test(url));
+        if (isTikTok) return true;
+
+        // Проверяем другие платформы
+        for (const platform in patterns) {
+            if (patterns[platform].some(pattern => pattern.test(url))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     detectPlatform(url) {
-        if (url.includes('tiktok.com')) return 'tiktok';
-        if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
-        if (url.includes('instagram.com')) return 'instagram';
+        const tiktokPatterns = [
+            /tiktok\.com/,
+            /vt\.tiktok\.com/,
+            /vm\.tiktok\.com/
+        ];
+
+        const youtubePatterns = [
+            /youtube\.com/,
+            /youtu\.be/
+        ];
+
+        const instagramPatterns = [
+            /instagram\.com/,
+            /instagr\.am/
+        ];
+
+        if (tiktokPatterns.some(pattern => pattern.test(url))) return 'tiktok';
+        if (youtubePatterns.some(pattern => pattern.test(url))) return 'youtube';
+        if (instagramPatterns.some(pattern => pattern.test(url))) return 'instagram';
+        
         return 'unknown';
     }
 
@@ -229,13 +288,19 @@ class TikTokSave {
             return;
         }
 
+        const platform = this.detectPlatform(url);
+        if (platform === 'unknown') {
+            this.showNotification('❌ Неподдерживаемая платформа', 'error');
+            return;
+        }
+
         this.isProcessing = true;
         this.setLoading(true);
 
         try {
             // Эмуляция обработки видео
             await this.simulateVideoProcessing(url);
-            const videoInfo = this.generateVideoInfo(url);
+            const videoInfo = this.generateVideoInfo(url, platform);
             this.displayResults(videoInfo);
             this.showNotification('✅ Видео готово к скачиванию');
         } catch (error) {
@@ -248,29 +313,65 @@ class TikTokSave {
     }
 
     async simulateVideoProcessing(url) {
+        // Добавляем случайную задержку для реалистичности
+        const delay = Math.random() * 2000 + 1000; // 1-3 секунды
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve();
-            }, 2000);
+            }, delay);
         });
     }
 
-    generateVideoInfo(url) {
-        const platform = this.detectPlatform(url);
+    generateVideoInfo(url, platform) {
         const titles = {
-            tiktok: ['Трендовый танец TikTok', 'Смешное видео с котиком', 'Лайфхак который изменит всё'],
-            youtube: ['Обзор нового смартфона', 'Музыкальный клип 2024', 'Обучение программированию'],
-            instagram: ['Красивый Reel с отпуска', 'Рецепт вкусного блюда', 'Тренды моды 2024']
+            tiktok: [
+                'Трендовый танец TikTok 🕺',
+                'Смешное видео с котиком 😹',
+                'Лайфхак который изменит всё 💡',
+                'Момент из жизни ✨',
+                'Креативное видео 🎨'
+            ],
+            youtube: [
+                'Обзор нового смартфона 📱',
+                'Музыкальный клип 2024 🎵',
+                'Обучение программированию 💻',
+                'Кулинарный рецепт 🍳',
+                'Путешествия по миру ✈️'
+            ],
+            instagram: [
+                'Красивый Reel с отпуска 🌴',
+                'Рецепт вкусного блюда 🍝',
+                'Тренды моды 2024 👗',
+                'Тренировка в зале 💪',
+                'Уютный вечер дома 🏠'
+            ]
         };
 
         const platformTitles = titles[platform] || titles.tiktok;
+        const randomTitle = platformTitles[Math.floor(Math.random() * platformTitles.length)];
 
         return {
-            title: platformTitles[Math.floor(Math.random() * platformTitles.length)],
+            title: randomTitle,
             platform: platform,
             url: url,
-            noWatermark: true
+            noWatermark: true,
+            duration: this.generateRandomDuration(),
+            size: this.generateRandomSize()
         };
+    }
+
+    generateRandomDuration() {
+        const minutes = Math.floor(Math.random() * 3);
+        const seconds = Math.floor(Math.random() * 60);
+        if (minutes === 0) {
+            return `${seconds} сек`;
+        }
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    generateRandomSize() {
+        const sizes = [2.3, 5.7, 8.1, 12.4, 15.8, 19.2, 23.5, 27.9];
+        return sizes[Math.floor(Math.random() * sizes.length)];
     }
 
     displayResults(videoInfo) {
@@ -278,6 +379,8 @@ class TikTokSave {
 
         document.getElementById('videoTitle').textContent = videoInfo.title;
         document.getElementById('videoPlatform').textContent = this.getPlatformName(videoInfo.platform);
+        document.getElementById('videoDuration').textContent = videoInfo.duration;
+        document.getElementById('videoSize').textContent = `${videoInfo.size} MB`;
 
         const resultsSection = document.getElementById('resultsSection');
         resultsSection.classList.remove('hidden');
@@ -324,13 +427,14 @@ class TikTokSave {
     }
 
     createDemoDownload() {
-        const content = 'Это демо-файл. В реальном приложении здесь будет ваше видео без водяных знаков.';
+        const platform = this.currentVideo.platform;
+        const content = `Это демо-файл. В реальном приложении здесь будет ваше видео с ${this.getPlatformName(platform)} без водяных знаков.\n\nСсылка: ${this.currentVideo.url}`;
         const blob = new Blob([content], { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.sanitizeFilename(this.currentVideo.title) + '.mp4';
+        a.download = this.sanitizeFilename(`${this.currentVideo.title} - ${this.getPlatformName(this.currentVideo.platform)}`) + '.mp4';
         a.style.display = 'none';
         
         document.body.appendChild(a);
@@ -341,7 +445,7 @@ class TikTokSave {
     }
 
     sanitizeFilename(filename) {
-        return filename.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').trim() || 'video';
+        return filename.replace(/[^a-zA-Z0-9а-яА-Я\s\-_]/g, '').trim() || 'video';
     }
 
     shareVideo() {
@@ -358,7 +462,9 @@ class TikTokSave {
             title: videoInfo.title,
             url: videoInfo.url,
             platform: videoInfo.platform,
-            date: new Date().toISOString()
+            date: new Date().toISOString(),
+            size: videoInfo.size,
+            duration: videoInfo.duration
         };
         
         history.unshift(historyItem);
@@ -400,6 +506,8 @@ class TikTokSave {
                         <span>${new Date(item.date).toLocaleDateString()}</span>
                         <span>•</span>
                         <span>${this.getPlatformIcon(item.platform)} ${this.getPlatformName(item.platform)}</span>
+                        <span>•</span>
+                        <span>${item.size} MB</span>
                     </div>
                 </div>
                 <div class="history-actions">
@@ -474,6 +582,14 @@ class TikTokSave {
 
     showFormatModal() {
         document.getElementById('formatModal').classList.remove('hidden');
+    }
+
+    showPrivacyModal() {
+        document.getElementById('privacyModal').classList.remove('hidden');
+    }
+
+    showTermsModal() {
+        document.getElementById('termsModal').classList.remove('hidden');
     }
 
     hideModals() {
