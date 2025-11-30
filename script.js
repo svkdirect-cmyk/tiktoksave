@@ -4,6 +4,7 @@ class TikTokSave {
         this.currentVideo = null;
         this.isProcessing = false;
         this.currentVideoUrl = null;
+        this.os = 'unknown';
         
         this.init();
     }
@@ -32,6 +33,23 @@ class TikTokSave {
         } catch (error) {
             console.error('❌ Telegram init error:', error);
         }
+    }
+
+    detectOS() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        
+        if (/windows phone/i.test(userAgent)) {
+            this.os = 'windows';
+        } else if (/android/i.test(userAgent)) {
+            this.os = 'android';
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            this.os = 'ios';
+        } else {
+            this.os = 'unknown';
+        }
+        
+        console.log(`📱 Detected OS: ${this.os}`);
+        return this.os;
     }
 
     bindEvents() {
@@ -161,24 +179,6 @@ class TikTokSave {
         console.log('✅ All events bound');
     }
 
-    detectOS() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        
-        // Windows Phone must come first because its UA also contains "Android"
-        if (/windows phone/i.test(userAgent)) {
-            this.os = 'windows';
-        } else if (/android/i.test(userAgent)) {
-            this.os = 'android';
-        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            this.os = 'ios';
-        } else {
-            this.os = 'unknown';
-        }
-        
-        console.log(`📱 Detected OS: ${this.os}`);
-        return this.os;
-    }
-
     switchPlatform(tab) {
         document.querySelectorAll('.platform-tab').forEach(t => {
             t.classList.remove('active');
@@ -301,7 +301,6 @@ class TikTokSave {
         this.setLoading(true);
 
         try {
-            // Получаем реальную информацию о видео
             const videoInfo = await this.fetchRealVideoInfo(url, platform);
             this.currentVideo = { ...videoInfo, url: url };
             this.currentVideoUrl = videoInfo.downloadUrl;
@@ -337,7 +336,6 @@ class TikTokSave {
             return videoData;
         } catch (error) {
             console.error('Error fetching video info:', error);
-            // Возвращаем заглушку в случае ошибки
             return this.generateMockVideoInfo(url, platform);
         }
     }
@@ -408,8 +406,7 @@ class TikTokSave {
 
     async fetchInstagramInfo(url) {
         const apis = [
-            `https://api.igram.io/api/dl?url=${encodeURIComponent(url)}`,
-            `https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index?url=${encodeURIComponent(url)}`
+            `https://api.igram.io/api/dl?url=${encodeURIComponent(url)}`
         ];
 
         for (const apiUrl of apis) {
@@ -506,7 +503,6 @@ class TikTokSave {
         
         this.showNotification('🚀 Запускаем авто-сохранение...');
         
-        // Автоматически выбираем лучший метод для ОС
         if (this.os === 'android') {
             await this.androidAutoDownload();
         } else if (this.os === 'ios') {
@@ -520,14 +516,12 @@ class TikTokSave {
         try {
             this.showNotification('📱 Скачиваем для Android...');
             
-            // Метод 1: Прямое скачивание
             const success = await this.forceDownload(this.currentVideoUrl);
             
             if (success) {
                 this.showNotification('✅ Видео скачано в Загрузки!');
                 this.saveToHistory(this.currentVideo);
             } else {
-                // Метод 2: Открываем с инструкциями
                 this.showAndroidInstructions();
             }
         } catch (error) {
@@ -539,10 +533,7 @@ class TikTokSave {
     async iosAutoDownload() {
         try {
             this.showNotification('📱 Открываем для iOS...');
-            
-            // Для iOS показываем инструкции
             this.showIOSInstructions();
-            
         } catch (error) {
             console.error('iOS download error:', error);
             this.showIOSInstructions();
@@ -551,7 +542,6 @@ class TikTokSave {
 
     async universalAutoDownload() {
         try {
-            // Пробуем все методы
             let success = await this.forceDownload(this.currentVideoUrl);
             
             if (!success) {
@@ -569,19 +559,14 @@ class TikTokSave {
     async forceDownload(url) {
         return new Promise((resolve) => {
             try {
-                // Создаем скрытую ссылку для скачивания
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = this.generateFilename();
                 a.style.display = 'none';
                 
-                // Добавляем в документ
                 document.body.appendChild(a);
-                
-                // Пытаемся скачать
                 a.click();
                 
-                // Ждем и проверяем
                 setTimeout(() => {
                     document.body.removeChild(a);
                     resolve(true);
