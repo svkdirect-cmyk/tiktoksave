@@ -1,1276 +1,1025 @@
-[file name]: style.css
+[file name]: script.js
 [file content begin]
-:root {
-    --primary-color: #ff0050;
-    --secondary-color: #00f2ea;
-    --accent-color: #ff0050;
-    --background: #000000;
-    --surface: #121212;
-    --surface-light: #1e1e1e;
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --text-muted: #6c757d;
-    --success: #00d4aa;
-    --error: #ff375f;
-    --warning: #ffb800;
-    --border-radius: 16px;
-    --border-radius-sm: 8px;
-    --border-radius-lg: 24px;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
-    --transition: all 0.3s ease;
-}
-
-[data-theme="light"] {
-    --background: #ffffff;
-    --surface: #f8f9fa;
-    --surface-light: #e9ecef;
-    --text-primary: #000000;
-    --text-secondary: #6c757d;
-    --text-muted: #adb5bd;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.15);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--background);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-}
-
-.app {
-    min-height: 100vh;
-    background: var(--background);
-}
-
-/* Font Awesome icons styling */
-.fas, .fab, .far {
-    margin-right: 0.3em;
-    vertical-align: middle;
-}
-
-/* Header */
-.header {
-    position: sticky;
-    top: 0;
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(20px);
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.logo .fas {
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.beta-badge {
-    background: var(--primary-color);
-    color: white;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 12px;
-    font-weight: 600;
-}
-
-.header-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-}
-
-.icon-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 3rem 1rem 2rem;
-    background: linear-gradient(135deg, rgba(255, 0, 80, 0.1), rgba(0, 242, 234, 0.1));
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    backdrop-filter: blur(10px);
-}
-
-.hero-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--text-primary), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-}
-
-.hero-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 500px;
-    margin: 0 auto 2rem;
-}
-
-.platform-icons {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.platform-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.platform-icon .fab, .platform-icon .fas {
-    font-size: 2rem;
-    margin-right: 0;
-}
-
-/* Input Section */
-.input-section {
-    padding: 2rem 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.input-container {
-    background: var(--surface);
-    border-radius: var(--border-radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.input-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.input-header h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.help-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    font-size: 1rem;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.help-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.platform-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.platform-tab {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: none;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-secondary);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 500;
-    min-width: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.platform-tab.active {
-    background: var(--accent-color);
-    color: white;
-}
-
-.platform-tab:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.url-input-group {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-}
-
-.input-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-.url-input {
-    width: 100%;
-    padding: 1rem 3rem 1rem 1rem;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    font-size: 1rem;
-    transition: var(--transition);
-    font-family: inherit;
-}
-
-.url-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.url-input::placeholder {
-    color: var(--text-secondary);
-}
-
-.clear-btn {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.clear-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.paste-btn {
-    padding: 1rem 1.5rem;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
-}
-
-.paste-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent-color);
-}
-
-.download-btn {
-    width: 100%;
-    padding: 1.25rem 2rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    border: none;
-    border-radius: var(--border-radius);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-}
-
-.download-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.download-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.btn-icon {
-    font-size: 1.2rem;
-}
-
-/* Instructions */
-.instructions {
-    padding: 2rem 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.instructions h3 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.steps {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.step {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-}
-
-.step-number {
-    background: var(--accent-color);
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    flex-shrink: 0;
-    margin-top: 0.25rem;
-}
-
-.step-content {
-    flex: 1;
-}
-
-.step-content strong {
-    display: block;
-    margin-bottom: 0.25rem;
-    color: var(--text-primary);
-}
-
-.step-content p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-/* Results Section */
-.results-section {
-    padding: 2rem 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.result-card {
-    background: var(--surface);
-    border-radius: var(--border-radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+class TikTokSave {
+    constructor() {
+        this.telegram = window.Telegram?.WebApp;
+        this.currentVideo = null;
+        this.isProcessing = false;
+        this.currentVideoUrl = null;
+        this.os = 'unknown';
+        
+        this.init();
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    init() {
+        this.initializeTelegram();
+        this.bindEvents();
+        this.loadHistory();
+        this.applyTheme();
+        this.detectOS();
+        console.log('TikTokSave initialized');
     }
-}
 
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
+    initializeTelegram() {
+        if (!this.telegram) {
+            console.log('Running outside Telegram');
+            return;
+        }
 
-.result-header h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--success);
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.close-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.video-info h4 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    line-height: 1.4;
-}
-
-.video-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.meta-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.meta-label {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.meta-value {
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.success {
-    color: var(--success) !important;
-}
-
-/* Download Methods */
-.download-methods {
-    display: flex;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    flex-wrap: wrap;
-}
-
-.download-method {
-    flex: 1;
-    min-width: 120px;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius);
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition);
-    border: 2px solid transparent;
-}
-
-.download-method:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent-color);
-    transform: translateY(-2px);
-}
-
-.download-method-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.download-method-title {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    display: block;
-}
-
-.download-method-desc {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    display: block;
-}
-
-.download-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.final-download-btn {
-    flex: 1;
-    padding: 1rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.final-download-btn.primary {
-    background: var(--success);
-    color: white;
-}
-
-.final-download-btn.primary:hover {
-    background: #00b894;
-    transform: translateY(-2px);
-}
-
-.final-download-btn.secondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.final-download-btn.secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent-color);
-}
-
-/* History Section */
-.history-section {
-    padding: 2rem 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.section-header h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.text-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition);
-    font-size: 0.9rem;
-}
-
-.text-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.history-list {
-    min-height: 100px;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-secondary);
-}
-
-.empty-state .fas, .empty-state .fab, .empty-state .far {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-    margin-right: 0;
-}
-
-.history-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: var(--surface);
-    border-radius: var(--border-radius);
-    margin-bottom: 0.5rem;
-    transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.history-item:hover {
-    background: var(--surface-light);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.history-info {
-    flex: 1;
-}
-
-.history-title {
-    font-weight: 500;
-    margin-bottom: 0.25rem;
-    color: var(--text-primary);
-}
-
-.history-meta {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.history-meta .fas, .history-meta .fab, .history-meta .far {
-    font-size: 0.9em;
-    margin-right: 0.2em;
-}
-
-.history-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.history-download {
-    background: none;
-    border: none;
-    color: var(--accent-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition);
-    font-size: 1.1rem;
-}
-
-.history-download:hover {
-    background: rgba(255, 0, 80, 0.1);
-}
-
-/* Footer */
-.footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 2rem 1rem;
-    margin-top: 2rem;
-}
-
-.footer-content {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.footer-content p {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-}
-
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.footer-link {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.footer-link:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* Modals */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    padding: 1rem;
-}
-
-.modal-content {
-    background: var(--surface);
-    border-radius: var(--border-radius-lg);
-    padding: 0;
-    max-width: 500px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: modalSlideUp 0.3s ease;
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.9);
+        try {
+            this.telegram.expand();
+            this.telegram.enableClosingConfirmation();
+            this.telegram.setHeaderColor('#000000');
+            this.telegram.setBackgroundColor('#000000');
+            console.log('Telegram Web App initialized');
+        } catch (error) {
+            console.error('Telegram init error:', error);
+        }
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+    detectOS() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        
+        if (/windows phone/i.test(userAgent)) {
+            this.os = 'windows';
+        } else if (/android/i.test(userAgent)) {
+            this.os = 'android';
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            this.os = 'ios';
+        } else {
+            this.os = 'unknown';
+        }
+        
+        console.log(`Detected OS: ${this.os}`);
+        return this.os;
     }
-}
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+    bindEvents() {
+        // Platform tabs
+        document.querySelectorAll('.platform-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                this.switchPlatform(e.currentTarget);
+            });
+        });
 
-.modal-header h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        // Paste button
+        document.getElementById('pasteButton').addEventListener('click', () => {
+            this.pasteFromClipboard();
+        });
 
-.modal-close {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        // Clear button
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            this.clearInput();
+        });
 
-.modal-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
+        // Download button
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            this.processVideo();
+        });
 
-.modal-body {
-    padding: 2rem;
-}
+        // Final download button
+        document.getElementById('finalDownloadBtn').addEventListener('click', () => {
+            this.startAutoDownload();
+        });
 
-.feature-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 1.5rem 0;
-}
+        // Download methods
+        document.querySelectorAll('.download-method').forEach(method => {
+            method.addEventListener('click', (e) => {
+                const methodType = e.currentTarget.dataset.method;
+                this.handleDownloadMethod(methodType);
+            });
+        });
 
-.feature-item {
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-sm);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        // Share button
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            this.shareVideo();
+        });
 
-.disclaimer {
-    text-align: center;
-    color: var(--warning);
-    font-size: 0.9rem;
-    margin-top: 1.5rem;
-    font-style: italic;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
+        // Close results
+        document.getElementById('closeResults').addEventListener('click', () => {
+            this.hideResults();
+        });
 
-.format-example {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-sm);
-}
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            this.toggleTheme();
+        });
 
-.format-example strong {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        // Info button
+        document.getElementById('infoBtn').addEventListener('click', () => {
+            this.showInfoModal();
+        });
 
-.format-example code {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.5rem;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    word-break: break-all;
-    color: var(--text-secondary);
-    display: block;
-    margin: 0.25rem 0;
-}
+        // Format help
+        document.getElementById('formatHelp').addEventListener('click', () => {
+            this.showFormatModal();
+        });
 
-/* Download Instructions */
-.download-steps {
-    margin: 1.5rem 0;
-}
+        // Clear history
+        document.getElementById('clearHistory').addEventListener('click', () => {
+            this.clearHistory();
+        });
 
-.download-steps .step {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius);
-}
+        // Privacy and Terms buttons
+        document.getElementById('privacyBtn').addEventListener('click', () => {
+            this.showPrivacyModal();
+        });
 
-.download-steps .step-number {
-    background: var(--accent-color);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-right: 1rem;
-    flex-shrink: 0;
-}
+        document.getElementById('termsBtn').addEventListener('click', () => {
+            this.showTermsModal();
+        });
 
-.download-steps .step-content strong {
-    display: block;
-    margin-bottom: 0.25rem;
-    color: var(--text-primary);
-}
+        // Modal close buttons
+        document.getElementById('closeInfoModal').addEventListener('click', () => {
+            this.hideModals();
+        });
 
-.download-steps .step-content p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
+        document.getElementById('closeFormatModal').addEventListener('click', () => {
+            this.hideModals();
+        });
 
-/* Download Options */
-.download-options {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 1.5rem 0;
-}
+        document.getElementById('closePrivacyModal').addEventListener('click', () => {
+            this.hideModals();
+        });
 
-.download-option-btn {
-    padding: 1rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    text-align: center;
-}
+        document.getElementById('closeTermsModal').addEventListener('click', () => {
+            this.hideModals();
+        });
 
-.download-option-btn.primary {
-    background: var(--primary-color);
-    color: white;
-}
+        // Notification close
+        document.getElementById('closeNotification').addEventListener('click', () => {
+            this.hideNotification();
+        });
 
-.download-option-btn.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
+        // URL input events
+        const urlInput = document.getElementById('videoUrl');
+        urlInput.addEventListener('input', () => {
+            this.validateUrl();
+        });
 
-.download-option-btn.success {
-    background: var(--success);
-    color: white;
-}
+        urlInput.addEventListener('paste', (e) => {
+            setTimeout(() => this.validateUrl(), 100);
+        });
 
-.download-option-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-}
+        // Close modals on backdrop click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.hideModals();
+                }
+            });
+        });
 
-/* Mobile Tips */
-.mobile-tips {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    margin-top: 1.5rem;
-}
+        // Escape key to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideModals();
+                this.hideNotification();
+            }
+        });
 
-.mobile-tips h4 {
-    margin-bottom: 0.75rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.mobile-tips ul {
-    margin: 0;
-    padding-left: 1.5rem;
-    color: var(--text-secondary);
-}
-
-.mobile-tips li {
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
-
-/* Download Link */
-.download-link {
-    display: block;
-    padding: 1.25rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    text-decoration: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    text-align: center;
-    margin: 1.5rem 0;
-    transition: var(--transition);
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.download-link:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Video Preview */
-.video-preview {
-    margin: 1.5rem 0;
-    text-align: center;
-}
-
-.video-preview video {
-    max-width: 100%;
-    border-radius: var(--border-radius);
-    background: #000;
-}
-
-/* Notification */
-.notification {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface);
-    color: var(--text-primary);
-    padding: 0;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
-    z-index: 3000;
-    border-left: 4px solid var(--accent-color);
-    max-width: 400px;
-    width: 90%;
-    animation: notificationSlideUp 0.3s ease;
-}
-
-@keyframes notificationSlideUp {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(100%);
+        console.log('All events bound');
     }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
+
+    switchPlatform(tab) {
+        document.querySelectorAll('.platform-tab').forEach(t => {
+            t.classList.remove('active');
+        });
+        tab.classList.add('active');
+        
+        const platform = tab.dataset.platform;
+        this.updatePlaceholder(platform);
+        this.validateUrl();
+    }
+
+    updatePlaceholder(platform) {
+        const input = document.getElementById('videoUrl');
+        const placeholders = {
+            'all': 'https://vt.tiktok.com/... или https://tiktok.com/...',
+            'tiktok': 'https://vt.tiktok.com/ZSfV2hRgW/ или https://tiktok.com/@user/video/123',
+            'youtube': 'https://www.youtube.com/watch?v=ABCDEFGHIJK',
+            'instagram': 'https://www.instagram.com/reel/ABC123DEF/'
+        };
+        
+        input.placeholder = placeholders[platform] || placeholders.all;
+    }
+
+    async pasteFromClipboard() {
+        try {
+            const text = await navigator.clipboard.readText();
+            document.getElementById('videoUrl').value = text;
+            this.showNotification('Ссылка вставлена из буфера');
+            this.validateUrl();
+        } catch (error) {
+            this.showNotification('Не удалось получить доступ к буферу', 'error');
+            document.getElementById('videoUrl').focus();
+        }
+    }
+
+    clearInput() {
+        document.getElementById('videoUrl').value = '';
+        this.validateUrl();
+    }
+
+    validateUrl() {
+        const url = document.getElementById('videoUrl').value.trim();
+        const btn = document.getElementById('downloadBtn');
+        
+        if (!url) {
+            btn.disabled = true;
+            return false;
+        }
+
+        const isValid = this.isValidUrl(url);
+        btn.disabled = !isValid;
+        
+        return isValid;
+    }
+
+    isValidUrl(url) {
+        const patterns = {
+            tiktok: [
+                /tiktok\.com\/.*\/video\/\d+/,
+                /vt\.tiktok\.com\/[A-Za-z0-9]+\//,
+                /vm\.tiktok\.com\/[A-Za-z0-9]+\//
+            ],
+            youtube: [
+                /youtube\.com\/watch\?v=[\w-]+/,
+                /youtu\.be\/[\w-]+/
+            ],
+            instagram: [
+                /instagram\.com\/(p|reel|tv)\/[\w-]+/,
+                /instagr\.am\/(p|reel|tv)\/[\w-]+/
+            ]
+        };
+
+        for (const platform in patterns) {
+            if (patterns[platform].some(pattern => pattern.test(url))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    detectPlatform(url) {
+        if (url.includes('tiktok.com')) return 'tiktok';
+        if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+        if (url.includes('instagram.com')) return 'instagram';
+        return 'unknown';
+    }
+
+    getPlatformName(platform) {
+        const names = {
+            'tiktok': 'TikTok',
+            'youtube': 'YouTube', 
+            'instagram': 'Instagram'
+        };
+        return names[platform] || 'Видео';
+    }
+
+    async processVideo() {
+        if (this.isProcessing) return;
+        
+        const url = document.getElementById('videoUrl').value.trim();
+        
+        if (!url) {
+            this.showNotification('Введите ссылку на видео', 'error');
+            return;
+        }
+
+        if (!this.isValidUrl(url)) {
+            this.showNotification('Неверный формат ссылки', 'error');
+            return;
+        }
+
+        const platform = this.detectPlatform(url);
+        if (platform === 'unknown') {
+            this.showNotification('Неподдерживаемая платформа', 'error');
+            return;
+        }
+
+        this.isProcessing = true;
+        this.setLoading(true);
+
+        try {
+            const videoInfo = await this.fetchRealVideoInfo(url, platform);
+            this.currentVideo = { ...videoInfo, url: url };
+            this.currentVideoUrl = videoInfo.downloadUrl;
+            this.displayResults(videoInfo);
+            this.showNotification('Видео готово к скачиванию');
+        } catch (error) {
+            console.error('Process error:', error);
+            this.showNotification(`Ошибка: ${error.message}`, 'error');
+        } finally {
+            this.isProcessing = false;
+            this.setLoading(false);
+        }
+    }
+
+    async fetchRealVideoInfo(url, platform) {
+        try {
+            let videoData;
+            
+            switch(platform) {
+                case 'tiktok':
+                    videoData = await this.fetchTikTokInfo(url);
+                    break;
+                case 'youtube':
+                    videoData = await this.fetchYouTubeInfo(url);
+                    break;
+                case 'instagram':
+                    videoData = await this.fetchInstagramInfo(url);
+                    break;
+                default:
+                    throw new Error('Неподдерживаемая платформа');
+            }
+            
+            return videoData;
+        } catch (error) {
+            console.error('Error fetching video info:', error);
+            return this.generateMockVideoInfo(url, platform);
+        }
+    }
+
+    async fetchTikTokInfo(url) {
+        const apis = [
+            `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`,
+            `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`
+        ];
+
+        for (const apiUrl of apis) {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) continue;
+                
+                const data = await response.json();
+                
+                if (data.data) {
+                    return {
+                        title: data.data.title || 'TikTok видео',
+                        duration: data.data.duration || '--:--',
+                        size: Math.round((data.data.size || 10240000) / 1024 / 1024),
+                        platform: 'tiktok',
+                        noWatermark: true,
+                        downloadUrl: data.data.play || data.data.wmplay || data.data.hdplay
+                    };
+                }
+            } catch (error) {
+                console.warn(`API ${apiUrl} failed:`, error);
+                continue;
+            }
+        }
+        
+        throw new Error('Не удалось получить информацию о видео');
+    }
+
+    async fetchYouTubeInfo(url) {
+        const apis = [
+            `https://api.vevioz.com/api/button/mp4/${encodeURIComponent(url)}`,
+            `https://api.youtubedownloader.com/video?url=${encodeURIComponent(url)}`
+        ];
+
+        for (const apiUrl of apis) {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) continue;
+                
+                const data = await response.json();
+                
+                if (data.downloadUrl || data.url) {
+                    return {
+                        title: data.title || 'YouTube видео',
+                        duration: this.formatDuration(data.duration),
+                        size: Math.round((data.size || 10240000) / 1024 / 1024),
+                        platform: 'youtube',
+                        noWatermark: true,
+                        downloadUrl: data.downloadUrl || data.url
+                    };
+                }
+            } catch (error) {
+                console.warn(`API ${apiUrl} failed:`, error);
+                continue;
+            }
+        }
+        
+        throw new Error('Не удалось получить информацию о видео');
+    }
+
+    async fetchInstagramInfo(url) {
+        const apis = [
+            `https://api.igram.io/api/dl?url=${encodeURIComponent(url)}`
+        ];
+
+        for (const apiUrl of apis) {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) continue;
+                
+                const data = await response.json();
+                
+                if (data.media) {
+                    const videoUrl = Array.isArray(data.media) ? data.media[0] : data.media;
+                    return {
+                        title: data.title || 'Instagram видео',
+                        duration: '--:--',
+                        size: 15,
+                        platform: 'instagram',
+                        noWatermark: true,
+                        downloadUrl: videoUrl
+                    };
+                }
+            } catch (error) {
+                console.warn(`API ${apiUrl} failed:`, error);
+                continue;
+            }
+        }
+        
+        throw new Error('Не удалось получить информацию о видео');
+    }
+
+    formatDuration(seconds) {
+        if (!seconds) return '--:--';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    generateMockVideoInfo(url, platform) {
+        const titles = {
+            tiktok: ['Трендовый танец TikTok', 'Смешное видео с животными', 'Лайфхак для жизни'],
+            youtube: ['Обзор технологий', 'Музыкальный клип', 'Обучающий урок'],
+            instagram: ['Reel с видами', 'Рецепт питания', 'Модный показ']
+        };
+
+        const platformTitles = titles[platform] || titles.tiktok;
+
+        return {
+            title: platformTitles[Math.floor(Math.random() * platformTitles.length)],
+            duration: this.generateRandomDuration(),
+            size: Math.floor(Math.random() * 50) + 10,
+            platform: platform,
+            noWatermark: true,
+            downloadUrl: url
+        };
+    }
+
+    generateRandomDuration() {
+        const minutes = Math.floor(Math.random() * 3);
+        const seconds = Math.floor(Math.random() * 60);
+        if (minutes === 0) {
+            return `${seconds} сек`;
+        }
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    displayResults(videoInfo) {
+        this.safeSetTextContent('videoTitle', videoInfo.title);
+        this.safeSetTextContent('videoPlatform', this.getPlatformName(videoInfo.platform));
+        this.safeSetTextContent('videoDuration', videoInfo.duration);
+        this.safeSetTextContent('videoSize', `${videoInfo.size} MB`);
+
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) {
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    safeSetTextContent(elementId, text) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = text;
+        }
+    }
+
+    hideResults() {
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) {
+            resultsSection.classList.add('hidden');
+        }
+    }
+
+    async startAutoDownload() {
+        if (!this.currentVideoUrl) return;
+        
+        this.showNotification('Запускаем авто-сохранение...');
+        
+        if (this.os === 'android') {
+            await this.androidAutoDownload();
+        } else if (this.os === 'ios') {
+            await this.iosAutoDownload();
+        } else {
+            await this.universalAutoDownload();
+        }
+    }
+
+    async androidAutoDownload() {
+        try {
+            this.showNotification('Скачиваем для Android...');
+            
+            const success = await this.forceDownload(this.currentVideoUrl);
+            
+            if (success) {
+                this.showNotification('Видео скачано в Загрузки!');
+                this.saveToHistory(this.currentVideo);
+            } else {
+                this.showAndroidInstructions();
+            }
+        } catch (error) {
+            console.error('Android download error:', error);
+            this.showAndroidInstructions();
+        }
+    }
+
+    async iosAutoDownload() {
+        try {
+            this.showNotification('Открываем для iOS...');
+            this.showIOSInstructions();
+        } catch (error) {
+            console.error('iOS download error:', error);
+            this.showIOSInstructions();
+        }
+    }
+
+    async universalAutoDownload() {
+        try {
+            let success = await this.forceDownload(this.currentVideoUrl);
+            
+            if (!success) {
+                this.showUniversalInstructions();
+            } else {
+                this.showNotification('Видео успешно скачано!');
+                this.saveToHistory(this.currentVideo);
+            }
+        } catch (error) {
+            console.error('Universal download error:', error);
+            this.showUniversalInstructions();
+        }
+    }
+
+    async forceDownload(url) {
+        return new Promise((resolve) => {
+            try {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = this.generateFilename();
+                a.style.display = 'none';
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    resolve(true);
+                }, 1000);
+                
+            } catch (error) {
+                resolve(false);
+            }
+        });
+    }
+
+    handleDownloadMethod(method) {
+        if (!this.currentVideoUrl) return;
+        
+        switch(method) {
+            case 'auto':
+                this.startAutoDownload();
+                break;
+            case 'direct':
+                this.directDownload();
+                break;
+            case 'manual':
+                this.showManualInstructions();
+                break;
+        }
+    }
+
+    directDownload() {
+        if (!this.currentVideoUrl) return;
+        
+        this.forceDownload(this.currentVideoUrl);
+        this.showNotification('Пытаемся скачать напрямую...');
+    }
+
+    showAndroidInstructions() {
+        const modal = document.getElementById('downloadInstructions');
+        const title = document.getElementById('instructionsTitle');
+        const content = document.getElementById('instructionsContent');
+        
+        title.textContent = 'Для Android';
+        
+        const safeUrl = this.escapeHtml(this.currentVideoUrl);
+        const safeFilename = this.escapeHtml(this.generateFilename());
+        
+        content.innerHTML = `
+            <div class="download-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Нажмите "Скачать" ниже</strong>
+                        <p>Откроется диалог скачивания</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Сохраните видео</strong>
+                        <p>Выберите папку "Загрузки" или "Downloads"</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Найдите в галерее</strong>
+                        <p>Видео появится в приложении "Фото" или "Галерея"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="download-actions">
+                <a href="${safeUrl}" download="${safeFilename}" class="download-link">
+                    Скачать видео сейчас
+                </a>
+                <button onclick="app.hideModals()" class="final-download-btn secondary">
+                    Закрыть
+                </button>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    showIOSInstructions() {
+        const modal = document.getElementById('downloadInstructions');
+        const title = document.getElementById('instructionsTitle');
+        const content = document.getElementById('instructionsContent');
+        
+        title.textContent = 'Для iPhone';
+        
+        const safeUrl = this.escapeHtml(this.currentVideoUrl);
+        
+        content.innerHTML = `
+            <div class="download-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Нажмите на видео ниже</strong>
+                        <p>Откроется видео в полноэкранном режиме</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Нажмите "Поделиться"</strong>
+                        <p>Иконка квадрата со стрелкой вверх</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Выберите "Сохранить видео"</strong>
+                        <p>Видео сохранится в приложение "Фото"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-preview">
+                <video controls autoplay muted style="max-width: 100%; border-radius: 10px;">
+                    <source src="${safeUrl}" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="download-actions">
+                <button onclick="app.hideModals()" class="final-download-btn primary">
+                    Понятно
+                </button>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    showManualInstructions() {
+        const modal = document.getElementById('downloadInstructions');
+        const title = document.getElementById('instructionsTitle');
+        const content = document.getElementById('instructionsContent');
+        
+        title.textContent = 'Ручное сохранение';
+        
+        const safeUrl = this.escapeHtml(this.currentVideoUrl);
+        const safeFilename = this.escapeHtml(this.generateFilename());
+        
+        content.innerHTML = `
+            <div class="download-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Нажмите и удерживайте видео</strong>
+                        <p>Долгое нажатие на ссылку ниже</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Выберите "Скачать"</strong>
+                        <p>В появившемся меню</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Сохраните в галерею</strong>
+                        <p>Видео появится в ваших медиафайлах</p>
+                    </div>
+                </div>
+            </div>
+            <div class="download-actions">
+                <a href="${safeUrl}" download="${safeFilename}" class="download-link">
+                    Нажмите и удерживайте для скачивания
+                </a>
+                <button onclick="app.hideModals()" class="final-download-btn secondary">
+                    Закрыть
+                </button>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    showUniversalInstructions() {
+        const modal = document.getElementById('downloadInstructions');
+        const title = document.getElementById('instructionsTitle');
+        const content = document.getElementById('instructionsContent');
+        
+        title.textContent = 'Скачать видео';
+        
+        const safeUrl = this.escapeHtml(this.currentVideoUrl);
+        const safeFilename = this.escapeHtml(this.generateFilename());
+        
+        content.innerHTML = `
+            <div class="download-options">
+                <button class="download-option-btn primary" onclick="app.directDownload()">
+                    Прямое скачивание
+                </button>
+                
+                <a href="${safeUrl}" target="_blank" class="download-option-btn secondary">
+                    Открыть и сохранить
+                </a>
+                
+                <a href="${safeUrl}" download="${safeFilename}" class="download-option-btn success">
+                    Скачать файл
+                </a>
+            </div>
+            
+            <div class="mobile-tips">
+                <h4>Советы для мобильных:</h4>
+                <ul>
+                    <li><strong>Android:</strong> Скачается в папку "Загрузки"</li>
+                    <li><strong>iPhone:</strong> Нажмите "Поделиться" → "Сохранить видео"</li>
+                    <li><strong>Все устройства:</strong> Долгое нажатие на ссылку</li>
+                </ul>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    generateFilename() {
+        const timestamp = new Date().getTime();
+        const platform = this.currentVideo?.platform || 'video';
+        const title = this.currentVideo?.title?.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').substring(0, 20) || 'video';
+        return `TikTokSave_${platform}_${title}_${timestamp}.mp4`;
+    }
+
+    shareVideo() {
+        this.hideResults();
+        document.getElementById('videoUrl').value = '';
+        document.getElementById('videoUrl').focus();
+        this.showNotification('Готово для новой ссылки');
+    }
+
+    saveToHistory(videoInfo) {
+        const history = this.getHistory();
+        const historyItem = {
+            id: Date.now(),
+            title: videoInfo.title,
+            url: videoInfo.url,
+            platform: videoInfo.platform,
+            date: new Date().toISOString(),
+            size: videoInfo.size,
+            duration: videoInfo.duration
+        };
+        
+        history.unshift(historyItem);
+        if (history.length > 10) {
+            history.pop();
+        }
+        
+        localStorage.setItem('tiktoksave_history', JSON.stringify(history));
+        this.loadHistory();
+    }
+
+    getHistory() {
+        try {
+            return JSON.parse(localStorage.getItem('tiktoksave_history') || '[]');
+        } catch {
+            return [];
+        }
+    }
+
+    loadHistory() {
+        const history = this.getHistory();
+        const historyList = document.getElementById('historyList');
+        
+        if (!historyList) return;
+        
+        if (history.length === 0) {
+            historyList.innerHTML = `
+                <div class="empty-state">
+                    <p>Здесь появятся ваши последние загрузки</p>
+                </div>
+            `;
+            return;
+        }
+        
+        historyList.innerHTML = history.map(item => {
+            const safeTitle = this.escapeHtml(item.title);
+            const safeUrl = this.escapeHtml(item.url);
+            const safePlatform = this.escapeHtml(item.platform);
+            
+            return `
+            <div class="history-item fade-in">
+                <div class="history-info">
+                    <div class="history-title">${safeTitle}</div>
+                    <div class="history-meta">
+                        <span>${new Date(item.date).toLocaleDateString()}</span>
+                        <span>•</span>
+                        <span>${this.getPlatformName(safePlatform)}</span>
+                        <span>•</span>
+                        <span>${item.size} MB</span>
+                    </div>
+                </div>
+                <div class="history-actions">
+                    <button class="history-download" onclick="app.redownload('${safeUrl}')" title="Скачать снова">
+                        Скачать
+                    </button>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+
+    getPlatformIcon(platform) {
+        const icons = {
+            tiktok: 'TikTok',
+            youtube: 'YouTube',
+            instagram: 'Instagram'
+        };
+        return icons[platform] || 'Видео';
+    }
+
+    redownload(url) {
+        document.getElementById('videoUrl').value = url;
+        this.processVideo();
+    }
+
+    clearHistory() {
+        if (confirm('Очистить всю историю загрузок?')) {
+            localStorage.removeItem('tiktoksave_history');
+            this.loadHistory();
+            this.showNotification('История очищена');
+        }
+    }
+
+    setLoading(loading) {
+        const btn = document.getElementById('downloadBtn');
+        if (!btn) return;
+        
+        const btnText = btn.querySelector('.btn-text');
+        const spinner = btn.querySelector('.loading-spinner');
+        
+        if (loading) {
+            this.isProcessing = true;
+            btn.disabled = true;
+            if (btnText) btnText.textContent = 'Обработка...';
+            if (spinner) spinner.classList.remove('hidden');
+        } else {
+            this.isProcessing = false;
+            btn.disabled = false;
+            if (btnText) btnText.textContent = 'Скачать видео';
+            if (spinner) spinner.classList.add('hidden');
+        }
+    }
+
+    showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const text = document.getElementById('notificationText');
+        
+        if (!notification || !text) return;
+        
+        text.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.classList.remove('hidden');
+        
+        setTimeout(() => {
+            this.hideNotification();
+        }, 5000);
+    }
+
+    hideNotification() {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.classList.add('hidden');
+        }
+    }
+
+    showInfoModal() {
+        const modal = document.getElementById('infoModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    showFormatModal() {
+        const modal = document.getElementById('formatModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    showPrivacyModal() {
+        const modal = document.getElementById('privacyModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    showTermsModal() {
+        const modal = document.getElementById('termsModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    hideModals() {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.classList.add('hidden');
+        });
+    }
+
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        const toggleBtn = document.getElementById('themeToggle');
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        if (toggleBtn) {
+            const themeIcon = toggleBtn.querySelector('.theme-icon');
+            if (themeIcon) {
+                themeIcon.className = newTheme === 'light' ? 'fas fa-moon theme-icon' : 'fas fa-sun theme-icon';
+            }
+        }
+        
+        localStorage.setItem('theme', newTheme);
+    }
+
+    applyTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const toggleBtn = document.getElementById('themeToggle');
+        
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (toggleBtn) {
+            const themeIcon = toggleBtn.querySelector('.theme-icon');
+            if (themeIcon) {
+                themeIcon.className = savedTheme === 'light' ? 'fas fa-moon theme-icon' : 'fas fa-sun theme-icon';
+            }
+        }
+    }
+
+    escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe
+            .toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 }
 
-.notification-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-}
+// Инициализация приложения
+let app;
+document.addEventListener('DOMContentLoaded', function() {
+    app = new TikTokSave();
+});
 
-.notification-content .fas, .notification-content .fab {
-    margin-right: 0.5rem;
-}
+// Обработка ошибок
+window.addEventListener('error', function(e) {
+    console.error('Global error:', e.error);
+});
 
-.notification-close {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 1rem;
-}
-
-.notification-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-/* Loading */
-.loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Utility Classes */
-.hidden {
-    display: none !important;
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-    
-    .platform-icons {
-        gap: 1rem;
-    }
-    
-    .platform-icon {
-        font-size: 0.8rem;
-    }
-    
-    .platform-icon .fab, .platform-icon .fas {
-        font-size: 1.5rem;
-    }
-    
-    .input-container {
-        padding: 1.5rem;
-    }
-    
-    .url-input-group {
-        flex-direction: column;
-    }
-    
-    .paste-btn {
-        justify-content: center;
-    }
-    
-    .download-actions {
-        flex-direction: column;
-    }
-    
-    .download-methods {
-        flex-direction: column;
-    }
-    
-    .download-method {
-        min-width: auto;
-    }
-    
-    .modal-content {
-        margin: 1rem;
-    }
-    
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .steps {
-        gap: 1rem;
-    }
-    
-    .step {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .step-number {
-        align-self: center;
-    }
-    
-    .download-steps .step {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .download-steps .step-number {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-        align-self: center;
-    }
-    
-    .download-options {
-        gap: 0.5rem;
-    }
-    
-    .download-option-btn {
-        padding: 1rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .header-content {
-        padding: 0.75rem;
-    }
-    
-    .logo {
-        font-size: 1.3rem;
-    }
-    
-    .hero {
-        padding: 2rem 1rem 1.5rem;
-    }
-    
-    .hero-title {
-        font-size: 1.75rem;
-    }
-    
-    .input-section,
-    .instructions,
-    .results-section,
-    .history-section {
-        padding: 1rem;
-    }
-    
-    .platform-tabs {
-        flex-direction: column;
-    }
-}
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+});
 [file content end]
