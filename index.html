@@ -1,3 +1,5 @@
+[file name]: index.html
+[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,6 +10,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="assets/icon-192.png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -16,15 +21,15 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <h1 class="logo">🎬 TikTokSave</h1>
+                    <h1 class="logo"><i class="fas fa-film"></i> TikTokSave</h1>
                     <span class="beta-badge">LIVE</span>
                 </div>
                 <div class="header-actions">
                     <button class="icon-btn" id="themeToggle" title="Сменить тему">
-                        <span class="theme-icon">🌙</span>
+                        <i class="fas fa-moon theme-icon"></i>
                     </button>
                     <button class="icon-btn" id="infoBtn" title="Информация">
-                        ℹ️
+                        <i class="fas fa-info-circle"></i>
                     </button>
                 </div>
             </div>
@@ -36,7 +41,7 @@
             <section class="hero">
                 <div class="hero-content">
                     <div class="hero-badge">
-                        <span>⚡</span>
+                        <i class="fas fa-bolt"></i>
                         <span>Полностью рабочее</span>
                     </div>
                     <h2 class="hero-title">Скачай видео без водяных знаков</h2>
@@ -44,15 +49,15 @@
                     
                     <div class="platform-icons">
                         <div class="platform-icon">
-                            <span>🎵</span>
+                            <i class="fab fa-tiktok"></i>
                             <span>TikTok</span>
                         </div>
                         <div class="platform-icon">
-                            <span>📺</span>
+                            <i class="fab fa-youtube"></i>
                             <span>YouTube</span>
                         </div>
                         <div class="platform-icon">
-                            <span>📷</span>
+                            <i class="fab fa-instagram"></i>
                             <span>Instagram</span>
                         </div>
                     </div>
@@ -64,24 +69,26 @@
                 <div class="input-container">
                     <div class="input-header">
                         <h3>Вставьте ссылку на видео</h3>
-                        <button class="help-btn" id="formatHelp">?</button>
+                        <button class="help-btn" id="formatHelp">
+                            <i class="fas fa-question"></i>
+                        </button>
                     </div>
                     
                     <div class="platform-tabs">
                         <button class="platform-tab active" data-platform="all">
-                            <span>🌐</span>
+                            <i class="fas fa-globe"></i>
                             Все
                         </button>
                         <button class="platform-tab" data-platform="tiktok">
-                            <span>🎵</span>
+                            <i class="fab fa-tiktok"></i>
                             TikTok
                         </button>
                         <button class="platform-tab" data-platform="youtube">
-                            <span>📺</span>
+                            <i class="fab fa-youtube"></i>
                             YouTube
                         </button>
                         <button class="platform-tab" data-platform="instagram">
-                            <span>📷</span>
+                            <i class="fab fa-instagram"></i>
                             Instagram
                         </button>
                     </div>
@@ -95,16 +102,18 @@
                                 class="url-input"
                                 autocomplete="off"
                             >
-                            <button id="clearBtn" class="clear-btn" title="Очистить">×</button>
+                            <button id="clearBtn" class="clear-btn" title="Очистить">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                         <button id="pasteButton" class="paste-btn">
-                            <span>📋</span>
+                            <i class="fas fa-paste"></i>
                             Вставить
                         </button>
                     </div>
                     
                     <button id="downloadBtn" class="download-btn">
-                        <span class="btn-icon">⬇️</span>
+                        <i class="fas fa-download btn-icon"></i>
                         <span class="btn-text">Скачать видео</span>
                         <div class="loading-spinner hidden">
                             <div class="spinner"></div>
@@ -145,8 +154,10 @@
             <section id="resultsSection" class="results-section hidden">
                 <div class="result-card">
                     <div class="result-header">
-                        <h3>✅ Видео готово!</h3>
-                        <button id="closeResults" class="close-btn">×</button>
+                        <h3><i class="fas fa-check-circle"></i> Видео готово!</h3>
+                        <button id="closeResults" class="close-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     
                     <div class="video-info">
@@ -166,24 +177,24 @@
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Без водяных знаков:</span>
-                                <span class="meta-value success">✅ Да</span>
+                                <span class="meta-value success"><i class="fas fa-check"></i> Да</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="download-methods">
                         <div class="download-method" data-method="auto">
-                            <span class="download-method-icon">🚀</span>
+                            <i class="fas fa-bolt download-method-icon"></i>
                             <span class="download-method-title">Авто-сохранение</span>
                             <span class="download-method-desc">Лучший метод</span>
                         </div>
                         <div class="download-method" data-method="direct">
-                            <span class="download-method-icon">📥</span>
+                            <i class="fas fa-download download-method-icon"></i>
                             <span class="download-method-title">Прямое скачивание</span>
                             <span class="download-method-desc">Для Android</span>
                         </div>
                         <div class="download-method" data-method="manual">
-                            <span class="download-method-icon">📱</span>
+                            <i class="fas fa-mobile-alt download-method-icon"></i>
                             <span class="download-method-title">Ручное сохранение</span>
                             <span class="download-method-desc">Для iPhone</span>
                         </div>
@@ -191,11 +202,11 @@
 
                     <div class="download-actions">
                         <button id="finalDownloadBtn" class="final-download-btn primary">
-                            <span class="btn-icon">💾</span>
+                            <i class="fas fa-save"></i>
                             Сохранить в галерею
                         </button>
                         <button id="shareBtn" class="final-download-btn secondary">
-                            <span class="btn-icon">🔄</span>
+                            <i class="fas fa-redo"></i>
                             Новое видео
                         </button>
                     </div>
@@ -205,12 +216,12 @@
             <!-- History Section -->
             <section class="history-section">
                 <div class="section-header">
-                    <h3>📋 История загрузок</h3>
+                    <h3><i class="fas fa-history"></i> История загрузок</h3>
                     <button id="clearHistory" class="text-btn">Очистить</button>
                 </div>
                 <div id="historyList" class="history-list">
                     <div class="empty-state">
-                        <span>📺</span>
+                        <i class="fas fa-tv"></i>
                         <p>Здесь появятся ваши последние загрузки</p>
                     </div>
                 </div>
@@ -220,10 +231,14 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <p>© 2024 TikTokSave • Авто-сохранение в галерею</p>
+                <p><i class="far fa-copyright"></i> 2024 TikTokSave • Авто-сохранение в галерею</p>
                 <div class="footer-links">
-                    <button class="footer-link" id="privacyBtn">Конфиденциальность</button>
-                    <button class="footer-link" id="termsBtn">Условия</button>
+                    <button class="footer-link" id="privacyBtn">
+                        <i class="fas fa-shield-alt"></i> Конфиденциальность
+                    </button>
+                    <button class="footer-link" id="termsBtn">
+                        <i class="fas fa-file-contract"></i> Условия
+                    </button>
                 </div>
             </div>
         </footer>
@@ -232,20 +247,22 @@
         <div id="infoModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>ℹ️ О приложении</h3>
-                    <button class="modal-close" id="closeInfoModal">×</button>
+                    <h3><i class="fas fa-info-circle"></i> О приложении</h3>
+                    <button class="modal-close" id="closeInfoModal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p><strong>TikTokSave</strong> - приложение для автоматического сохранения видео в галерею.</p>
                     
                     <div class="feature-list">
-                        <div class="feature-item">✅ Авто-сохранение в галерею</div>
-                        <div class="feature-item">✅ Без водяных знаков</div>
-                        <div class="feature-item">✅ Поддержка TikTok, YouTube, Instagram</div>
-                        <div class="feature-item">✅ Работает на iOS и Android</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Авто-сохранение в галерею</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Без водяных знаков</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Поддержка TikTok, YouTube, Instagram</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Работает на iOS и Android</div>
                     </div>
                     
-                    <p class="disclaimer">⚠️ Используйте только для личных целей.</p>
+                    <p class="disclaimer"><i class="fas fa-exclamation-triangle"></i> Используйте только для личных целей.</p>
                 </div>
             </div>
         </div>
@@ -253,23 +270,25 @@
         <div id="formatModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>📝 Поддерживаемые ссылки</h3>
-                    <button class="modal-close" id="closeFormatModal">×</button>
+                    <h3><i class="fas fa-link"></i> Поддерживаемые ссылки</h3>
+                    <button class="modal-close" id="closeFormatModal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="format-example">
-                        <strong>🔗 TikTok (все форматы):</strong>
+                        <strong><i class="fab fa-tiktok"></i> TikTok (все форматы):</strong>
                         <code>https://vt.tiktok.com/ZSfV2hRgW/</code>
                         <code>https://vm.tiktok.com/ZSFvkR5Xy/</code>
                         <code>https://www.tiktok.com/@username/video/123456789</code>
                     </div>
                     <div class="format-example">
-                        <strong>📺 YouTube:</strong>
+                        <strong><i class="fab fa-youtube"></i> YouTube:</strong>
                         <code>https://www.youtube.com/watch?v=ABCDEFGHIJK</code>
                         <code>https://youtu.be/ABCDEFGHIJK</code>
                     </div>
                     <div class="format-example">
-                        <strong>📷 Instagram:</strong>
+                        <strong><i class="fab fa-instagram"></i> Instagram:</strong>
                         <code>https://www.instagram.com/reel/ABC123DEF/</code>
                         <code>https://www.instagram.com/p/ABC123DEF/</code>
                     </div>
@@ -281,8 +300,10 @@
         <div id="downloadInstructions" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 id="instructionsTitle">💾 Сохранение видео</h3>
-                    <button class="modal-close" onclick="app.hideModals()">×</button>
+                    <h3 id="instructionsTitle"><i class="fas fa-save"></i> Сохранение видео</h3>
+                    <button class="modal-close" onclick="app.hideModals()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="instructionsContent">
@@ -296,17 +317,19 @@
         <div id="privacyModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>🔒 Конфиденциальность</h3>
-                    <button class="modal-close" id="closePrivacyModal">×</button>
+                    <h3><i class="fas fa-shield-alt"></i> Конфиденциальность</h3>
+                    <button class="modal-close" id="closePrivacyModal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p><strong>Политика конфиденциальности TikTokSave</strong></p>
                     <p>Мы ценим вашу конфиденциальность. Приложение:</p>
                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
-                        <li>Не собирает личные данные</li>
-                        <li>Не хранит историю на серверах</li>
-                        <li>Работает полностью в вашем браузере</li>
-                        <li>Использует локальное хранилище для истории загрузок</li>
+                        <li><i class="fas fa-check"></i> Не собирает личные данные</li>
+                        <li><i class="fas fa-check"></i> Не хранит историю на серверах</li>
+                        <li><i class="fas fa-check"></i> Работает полностью в вашем браузере</li>
+                        <li><i class="fas fa-check"></i> Использует локальное хранилище для истории загрузок</li>
                     </ul>
                     <p>Вся история хранится только на вашем устройстве и может быть удалена в любой момент.</p>
                 </div>
@@ -317,19 +340,21 @@
         <div id="termsModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>📝 Условия использования</h3>
-                    <button class="modal-close" id="closeTermsModal">×</button>
+                    <h3><i class="fas fa-file-contract"></i> Условия использования</h3>
+                    <button class="modal-close" id="closeTermsModal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p><strong>Условия использования TikTokSave</strong></p>
                     <p>Используя это приложение, вы соглашаетесь с:</p>
                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
-                        <li>Использованием только в личных целях</li>
-                        <li>Соблюдением авторских прав</li>
-                        <li>Ответственностью за контент который вы скачиваете</li>
-                        <li>Тем что приложение предоставляется "как есть"</li>
+                        <li><i class="fas fa-user"></i> Использованием только в личных целях</li>
+                        <li><i class="fas fa-copyright"></i> Соблюдением авторских прав</li>
+                        <li><i class="fas fa-exclamation-circle"></i> Ответственностью за контент который вы скачиваете</li>
+                        <li><i class="fas fa-code"></i> Тем что приложение предоставляется "как есть"</li>
                     </ul>
-                    <p class="disclaimer">⚠️ Приложение предназначено для легального использования. Соблюдайте законы вашей страны.</p>
+                    <p class="disclaimer"><i class="fas fa-exclamation-triangle"></i> Приложение предназначено для легального использования. Соблюдайте законы вашей страны.</p>
                 </div>
             </div>
         </div>
@@ -338,7 +363,9 @@
         <div id="notification" class="notification hidden">
             <div class="notification-content">
                 <span id="notificationText"></span>
-                <button id="closeNotification" class="notification-close">×</button>
+                <button id="closeNotification" class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -346,3 +373,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+[file content end]
