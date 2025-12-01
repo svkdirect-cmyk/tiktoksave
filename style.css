@@ -51,6 +51,10 @@ body {
     background: var(--background);
 }
 
+.app.hidden {
+    display: none;
+}
+
 /* Font Awesome icons styling */
 .fas, .fab, .far {
     margin-right: 0.3em;
@@ -791,6 +795,10 @@ body {
     padding: 1rem;
 }
 
+.modal.hidden {
+    display: none;
+}
+
 .modal-content {
     background: var(--surface);
     border-radius: var(--border-radius-lg);
@@ -1082,6 +1090,10 @@ body {
     max-width: 400px;
     width: 90%;
     animation: notificationSlideUp 0.3s ease;
+}
+
+.notification.hidden {
+    display: none;
 }
 
 @keyframes notificationSlideUp {
