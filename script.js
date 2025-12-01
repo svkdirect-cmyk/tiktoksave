@@ -1,3 +1,5 @@
+[file name]: script.js
+[file content begin]
 class TikTokSave {
     constructor() {
         this.telegram = window.Telegram?.WebApp;
@@ -206,10 +208,10 @@ class TikTokSave {
         try {
             const text = await navigator.clipboard.readText();
             document.getElementById('videoUrl').value = text;
-            this.showNotification('📋 Ссылка вставлена из буфера');
+            this.showNotification('<i class="fas fa-paste"></i> Ссылка вставлена из буфера');
             this.validateUrl();
         } catch (error) {
-            this.showNotification('❌ Не удалось получить доступ к буферу', 'error');
+            this.showNotification('<i class="fas fa-exclamation-circle"></i> Не удалось получить доступ к буферу', 'error');
             document.getElementById('videoUrl').focus();
         }
     }
@@ -282,18 +284,18 @@ class TikTokSave {
         const url = document.getElementById('videoUrl').value.trim();
         
         if (!url) {
-            this.showNotification('❌ Введите ссылку на видео', 'error');
+            this.showNotification('<i class="fas fa-exclamation-circle"></i> Введите ссылку на видео', 'error');
             return;
         }
 
         if (!this.isValidUrl(url)) {
-            this.showNotification('❌ Неверный формат ссылки', 'error');
+            this.showNotification('<i class="fas fa-exclamation-circle"></i> Неверный формат ссылки', 'error');
             return;
         }
 
         const platform = this.detectPlatform(url);
         if (platform === 'unknown') {
-            this.showNotification('❌ Неподдерживаемая платформа', 'error');
+            this.showNotification('<i class="fas fa-exclamation-circle"></i> Неподдерживаемая платформа', 'error');
             return;
         }
 
@@ -305,10 +307,10 @@ class TikTokSave {
             this.currentVideo = { ...videoInfo, url: url };
             this.currentVideoUrl = videoInfo.downloadUrl;
             this.displayResults(videoInfo);
-            this.showNotification('✅ Видео готово к скачиванию');
+            this.showNotification('<i class="fas fa-check-circle"></i> Видео готово к скачиванию');
         } catch (error) {
             console.error('Process error:', error);
-            this.showNotification(`❌ Ошибка: ${error.message}`, 'error');
+            this.showNotification(`<i class="fas fa-exclamation-circle"></i> Ошибка: ${error.message}`, 'error');
         } finally {
             this.isProcessing = false;
             this.setLoading(false);
@@ -501,7 +503,7 @@ class TikTokSave {
     async startAutoDownload() {
         if (!this.currentVideoUrl) return;
         
-        this.showNotification('🚀 Запускаем авто-сохранение...');
+        this.showNotification('<i class="fas fa-rocket"></i> Запускаем авто-сохранение...');
         
         if (this.os === 'android') {
             await this.androidAutoDownload();
@@ -514,12 +516,12 @@ class TikTokSave {
 
     async androidAutoDownload() {
         try {
-            this.showNotification('📱 Скачиваем для Android...');
+            this.showNotification('<i class="fas fa-mobile-alt"></i> Скачиваем для Android...');
             
             const success = await this.forceDownload(this.currentVideoUrl);
             
             if (success) {
-                this.showNotification('✅ Видео скачано в Загрузки!');
+                this.showNotification('<i class="fas fa-check-circle"></i> Видео скачано в Загрузки!');
                 this.saveToHistory(this.currentVideo);
             } else {
                 this.showAndroidInstructions();
@@ -532,7 +534,7 @@ class TikTokSave {
 
     async iosAutoDownload() {
         try {
-            this.showNotification('📱 Открываем для iOS...');
+            this.showNotification('<i class="fas fa-mobile-alt"></i> Открываем для iOS...');
             this.showIOSInstructions();
         } catch (error) {
             console.error('iOS download error:', error);
@@ -547,7 +549,7 @@ class TikTokSave {
             if (!success) {
                 this.showUniversalInstructions();
             } else {
-                this.showNotification('✅ Видео успешно скачано!');
+                this.showNotification('<i class="fas fa-check-circle"></i> Видео успешно скачано!');
                 this.saveToHistory(this.currentVideo);
             }
         } catch (error) {
@@ -598,7 +600,7 @@ class TikTokSave {
         if (!this.currentVideoUrl) return;
         
         this.forceDownload(this.currentVideoUrl);
-        this.showNotification('📥 Пытаемся скачать напрямую...');
+        this.showNotification('<i class="fas fa-download"></i> Пытаемся скачать напрямую...');
     }
 
     showAndroidInstructions() {
@@ -606,7 +608,7 @@ class TikTokSave {
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
-        title.textContent = '📱 Для Android';
+        title.innerHTML = '<i class="fas fa-android"></i> Для Android';
         content.innerHTML = `
             <div class="download-steps">
                 <div class="step">
@@ -633,10 +635,10 @@ class TikTokSave {
             </div>
             <div class="download-actions">
                 <a href="${this.currentVideoUrl}" download="${this.generateFilename()}" class="download-link">
-                    📥 Скачать видео сейчас
+                    <i class="fas fa-download"></i> Скачать видео сейчас
                 </a>
                 <button onclick="app.hideModals()" class="final-download-btn secondary">
-                    Закрыть
+                    <i class="fas fa-times"></i> Закрыть
                 </button>
             </div>
         `;
@@ -649,7 +651,7 @@ class TikTokSave {
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
-        title.textContent = '📱 Для iPhone';
+        title.innerHTML = '<i class="fab fa-apple"></i> Для iPhone';
         content.innerHTML = `
             <div class="download-steps">
                 <div class="step">
@@ -682,7 +684,7 @@ class TikTokSave {
             </div>
             <div class="download-actions">
                 <button onclick="app.hideModals()" class="final-download-btn primary">
-                    Понятно
+                    <i class="fas fa-check"></i> Понятно
                 </button>
             </div>
         `;
@@ -695,7 +697,7 @@ class TikTokSave {
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
-        title.textContent = '💾 Ручное сохранение';
+        title.innerHTML = '<i class="fas fa-hands"></i> Ручное сохранение';
         content.innerHTML = `
             <div class="download-steps">
                 <div class="step">
@@ -722,10 +724,10 @@ class TikTokSave {
             </div>
             <div class="download-actions">
                 <a href="${this.currentVideoUrl}" download="${this.generateFilename()}" class="download-link">
-                    📥 Нажмите и удерживайте для скачивания
+                    <i class="fas fa-hand-point-down"></i> Нажмите и удерживайте для скачивания
                 </a>
                 <button onclick="app.hideModals()" class="final-download-btn secondary">
-                    Закрыть
+                    <i class="fas fa-times"></i> Закрыть
                 </button>
             </div>
         `;
@@ -738,31 +740,31 @@ class TikTokSave {
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
-        title.textContent = '💾 Скачать видео';
+        title.innerHTML = '<i class="fas fa-save"></i> Скачать видео';
         content.innerHTML = `
             <div class="download-options">
                 <button class="download-option-btn primary" onclick="app.directDownload()">
-                    <span>📥</span>
+                    <i class="fas fa-download"></i>
                     Прямое скачивание
                 </button>
                 
                 <a href="${this.currentVideoUrl}" target="_blank" class="download-option-btn secondary">
-                    <span>🔗</span>
+                    <i class="fas fa-external-link-alt"></i>
                     Открыть и сохранить
                 </a>
                 
                 <a href="${this.currentVideoUrl}" download="${this.generateFilename()}" class="download-option-btn success">
-                    <span>💾</span>
+                    <i class="fas fa-save"></i>
                     Скачать файл
                 </a>
             </div>
             
             <div class="mobile-tips">
-                <h4>📱 Советы для мобильных:</h4>
+                <h4><i class="fas fa-mobile-alt"></i> Советы для мобильных:</h4>
                 <ul>
-                    <li><strong>Android:</strong> Скачается в папку "Загрузки"</li>
-                    <li><strong>iPhone:</strong> Нажмите "Поделиться" → "Сохранить видео"</li>
-                    <li><strong>Все устройства:</strong> Долгое нажатие на ссылку</li>
+                    <li><strong><i class="fab fa-android"></i> Android:</strong> Скачается в папку "Загрузки"</li>
+                    <li><strong><i class="fab fa-apple"></i> iPhone:</strong> Нажмите "Поделиться" → "Сохранить видео"</li>
+                    <li><strong><i class="fas fa-mobile"></i> Все устройства:</strong> Долгое нажатие на ссылку</li>
                 </ul>
             </div>
         `;
@@ -781,7 +783,7 @@ class TikTokSave {
         this.hideResults();
         document.getElementById('videoUrl').value = '';
         document.getElementById('videoUrl').focus();
-        this.showNotification('🔄 Готово для новой ссылки');
+        this.showNotification('<i class="fas fa-redo"></i> Готово для новой ссылки');
     }
 
     saveToHistory(videoInfo) {
@@ -822,7 +824,7 @@ class TikTokSave {
         if (history.length === 0) {
             historyList.innerHTML = `
                 <div class="empty-state">
-                    <span>📺</span>
+                    <i class="fas fa-tv"></i>
                     <p>Здесь появятся ваши последние загрузки</p>
                 </div>
             `;
@@ -834,16 +836,16 @@ class TikTokSave {
                 <div class="history-info">
                     <div class="history-title">${this.escapeHtml(item.title)}</div>
                     <div class="history-meta">
-                        <span>${new Date(item.date).toLocaleDateString()}</span>
+                        <span><i class="far fa-calendar"></i> ${new Date(item.date).toLocaleDateString()}</span>
                         <span>•</span>
                         <span>${this.getPlatformIcon(item.platform)} ${this.getPlatformName(item.platform)}</span>
                         <span>•</span>
-                        <span>${item.size} MB</span>
+                        <span><i class="fas fa-weight"></i> ${item.size} MB</span>
                     </div>
                 </div>
                 <div class="history-actions">
                     <button class="history-download" onclick="app.redownload('${this.escapeHtml(item.url)}')" title="Скачать снова">
-                        📥
+                        <i class="fas fa-download"></i>
                     </button>
                 </div>
             </div>
@@ -852,11 +854,11 @@ class TikTokSave {
 
     getPlatformIcon(platform) {
         const icons = {
-            tiktok: '🎵',
-            youtube: '📺',
-            instagram: '📷'
+            tiktok: '<i class="fab fa-tiktok"></i>',
+            youtube: '<i class="fab fa-youtube"></i>',
+            instagram: '<i class="fab fa-instagram"></i>'
         };
-        return icons[platform] || '🌐';
+        return icons[platform] || '<i class="fas fa-globe"></i>';
     }
 
     redownload(url) {
@@ -868,7 +870,7 @@ class TikTokSave {
         if (confirm('Очистить всю историю загрузок?')) {
             localStorage.removeItem('tiktoksave_history');
             this.loadHistory();
-            this.showNotification('🗑️ История очищена');
+            this.showNotification('<i class="fas fa-trash"></i> История очищена');
         }
     }
 
@@ -898,7 +900,7 @@ class TikTokSave {
         
         if (!notification || !text) return;
         
-        text.textContent = message;
+        text.innerHTML = message;
         notification.className = `notification ${type}`;
         notification.classList.remove('hidden');
         
@@ -957,7 +959,7 @@ class TikTokSave {
         if (toggleBtn) {
             const themeIcon = toggleBtn.querySelector('.theme-icon');
             if (themeIcon) {
-                themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
+                themeIcon.className = newTheme === 'light' ? 'fas fa-moon theme-icon' : 'fas fa-sun theme-icon';
             }
         }
         
@@ -972,7 +974,7 @@ class TikTokSave {
         if (toggleBtn) {
             const themeIcon = toggleBtn.querySelector('.theme-icon');
             if (themeIcon) {
-                themeIcon.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+                themeIcon.className = savedTheme === 'light' ? 'fas fa-moon theme-icon' : 'fas fa-sun theme-icon';
             }
         }
     }
@@ -1001,3 +1003,4 @@ window.addEventListener('error', function(e) {
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Unhandled promise rejection:', e.reason);
 });
+[file content end]
