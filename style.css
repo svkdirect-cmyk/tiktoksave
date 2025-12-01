@@ -1,3 +1,5 @@
+[file name]: style.css
+[file content begin]
 :root {
     --primary-color: #ff0050;
     --secondary-color: #00f2ea;
@@ -49,6 +51,12 @@ body {
     background: var(--background);
 }
 
+/* Font Awesome icons styling */
+.fas, .fab, .far {
+    margin-right: 0.3em;
+    vertical-align: middle;
+}
+
 /* Header */
 .header {
     position: sticky;
@@ -77,6 +85,13 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo .fas {
     background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -172,8 +187,9 @@ body {
     color: var(--text-secondary);
 }
 
-.platform-icon span:first-child {
+.platform-icon .fab, .platform-icon .fas {
     font-size: 2rem;
+    margin-right: 0;
 }
 
 /* Input Section */
@@ -472,7 +488,7 @@ body {
     padding: 0.5rem;
     border-radius: 50%;
     transition: var(--transition);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     width: 32px;
     height: 32px;
     display: flex;
@@ -650,11 +666,12 @@ body {
     color: var(--text-secondary);
 }
 
-.empty-state span {
+.empty-state .fas, .empty-state .fab, .empty-state .far {
     font-size: 3rem;
     display: block;
     margin-bottom: 1rem;
     opacity: 0.5;
+    margin-right: 0;
 }
 
 .history-item {
@@ -689,6 +706,13 @@ body {
     color: var(--text-secondary);
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.history-meta .fas, .history-meta .fab, .history-meta .far {
+    font-size: 0.9em;
+    margin-right: 0.2em;
 }
 
 .history-actions {
@@ -701,10 +725,10 @@ body {
     border: none;
     color: var(--accent-color);
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     border-radius: var(--border-radius-sm);
     transition: var(--transition);
-    font-size: 1.1rem;
+    font-size: 0.9rem;
 }
 
 .history-download:hover {
@@ -802,6 +826,9 @@ body {
 .modal-header h3 {
     font-size: 1.3rem;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .modal-close {
@@ -812,7 +839,7 @@ body {
     padding: 0.5rem;
     border-radius: 50%;
     transition: var(--transition);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     width: 32px;
     height: 32px;
     display: flex;
@@ -829,6 +856,19 @@ body {
     padding: 2rem;
 }
 
+.modal-list {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+    list-style: none;
+}
+
+.modal-list li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
 .feature-list {
     display: flex;
     flex-direction: column;
@@ -841,6 +881,9 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius-sm);
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .disclaimer {
@@ -849,6 +892,10 @@ body {
     font-size: 0.9rem;
     margin-top: 1.5rem;
     font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .format-example {
@@ -862,6 +909,9 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .format-example code {
@@ -872,6 +922,8 @@ body {
     font-size: 0.85rem;
     word-break: break-all;
     color: var(--text-secondary);
+    display: block;
+    margin: 0.25rem 0;
 }
 
 /* Download Instructions */
@@ -1050,6 +1102,10 @@ body {
     padding: 1rem 1.5rem;
 }
 
+.notification-content .fas, .notification-content .fab {
+    margin-right: 0.5rem;
+}
+
 .notification-close {
     background: none;
     border: none;
@@ -1119,7 +1175,7 @@ body {
         font-size: 0.8rem;
     }
     
-    .platform-icon span:first-child {
+    .platform-icon .fab, .platform-icon .fas {
         font-size: 1.5rem;
     }
     
@@ -1217,3 +1273,4 @@ body {
         flex-direction: column;
     }
 }
+[file content end]
