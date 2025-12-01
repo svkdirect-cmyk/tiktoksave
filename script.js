@@ -1,5 +1,3 @@
-[file name]: script.js
-[file content begin]
 // Упрощенный класс TikTokSave с основными функциями
 class TikTokSave {
     constructor() {
@@ -662,4 +660,3 @@ window.addEventListener('error', function(e) {
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Необработанное отклонение промиса:', e.reason);
 });
-[file content end]
