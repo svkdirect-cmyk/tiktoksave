@@ -1,87 +1,58 @@
 [file name]: script.js
 [file content begin]
+// Упрощенный класс TikTokSave с основными функциями
 class TikTokSave {
     constructor() {
         this.telegram = window.Telegram?.WebApp;
         this.currentVideo = null;
         this.isProcessing = false;
         this.currentVideoUrl = null;
-        this.os = 'unknown';
         
+        console.log('Инициализация TikTokSave...');
         this.init();
     }
 
     init() {
-        this.initializeTelegram();
-        this.bindEvents();
-        this.loadHistory();
-        this.applyTheme();
-        this.detectOS();
-        console.log('TikTokSave initialized');
-    }
-
-    initializeTelegram() {
-        if (!this.telegram) {
-            console.log('Running outside Telegram');
-            return;
-        }
-
         try {
-            this.telegram.expand();
-            this.telegram.enableClosingConfirmation();
-            this.telegram.setHeaderColor('#000000');
-            this.telegram.setBackgroundColor('#000000');
-            console.log('Telegram Web App initialized');
+            this.bindEvents();
+            this.loadHistory();
+            this.applyTheme();
+            this.validateUrl(); // Инициализация состояния кнопки
+            
+            console.log('TikTokSave успешно инициализирован');
         } catch (error) {
-            console.error('Telegram init error:', error);
+            console.error('Ошибка при инициализации:', error);
         }
-    }
-
-    detectOS() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        
-        if (/windows phone/i.test(userAgent)) {
-            this.os = 'windows';
-        } else if (/android/i.test(userAgent)) {
-            this.os = 'android';
-        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            this.os = 'ios';
-        } else {
-            this.os = 'unknown';
-        }
-        
-        console.log(`Detected OS: ${this.os}`);
-        return this.os;
     }
 
     bindEvents() {
+        console.log('Привязка событий...');
+        
         // Platform tabs
-        document.querySelectorAll('.platform-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                this.switchPlatform(e.currentTarget);
-            });
-        });
-
-        // Paste button
-        document.getElementById('pasteButton').addEventListener('click', () => {
-            this.pasteFromClipboard();
-        });
-
-        // Clear button
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            this.clearInput();
-        });
-
-        // Download button
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            this.processVideo();
-        });
-
-        // Final download button
-        document.getElementById('finalDownloadBtn').addEventListener('click', () => {
-            this.startAutoDownload();
-        });
-
+        this.bindPlatformTabs();
+        
+        // Основные кнопки
+        this.bindButton('pasteButton', this.pasteFromClipboard.bind(this));
+        this.bindButton('clearBtn', this.clearInput.bind(this));
+        this.bindButton('downloadBtn', this.processVideo.bind(this));
+        this.bindButton('finalDownloadBtn', this.startAutoDownload.bind(this));
+        this.bindButton('shareBtn', this.shareVideo.bind(this));
+        this.bindButton('closeResults', this.hideResults.bind(this));
+        this.bindButton('themeToggle', this.toggleTheme.bind(this));
+        this.bindButton('infoBtn', this.showInfoModal.bind(this));
+        this.bindButton('formatHelp', this.showFormatModal.bind(this));
+        this.bindButton('clearHistory', this.clearHistory.bind(this));
+        this.bindButton('privacyBtn', this.showPrivacyModal.bind(this));
+        this.bindButton('termsBtn', this.showTermsModal.bind(this));
+        
+        // Закрытие модальных окон
+        this.bindButton('closeInfoModal', this.hideModals.bind(this));
+        this.bindButton('closeFormatModal', this.hideModals.bind(this));
+        this.bindButton('closePrivacyModal', this.hideModals.bind(this));
+        this.bindButton('closeTermsModal', this.hideModals.bind(this));
+        this.bindButton('closeDownloadInstructions', this.hideModals.bind(this));
+        this.bindButton('closeNotification', this.hideNotification.bind(this));
+        
         // Download methods
         document.querySelectorAll('.download-method').forEach(method => {
             method.addEventListener('click', (e) => {
@@ -89,78 +60,19 @@ class TikTokSave {
                 this.handleDownloadMethod(methodType);
             });
         });
-
-        // Share button
-        document.getElementById('shareBtn').addEventListener('click', () => {
-            this.shareVideo();
-        });
-
-        // Close results
-        document.getElementById('closeResults').addEventListener('click', () => {
-            this.hideResults();
-        });
-
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            this.toggleTheme();
-        });
-
-        // Info button
-        document.getElementById('infoBtn').addEventListener('click', () => {
-            this.showInfoModal();
-        });
-
-        // Format help
-        document.getElementById('formatHelp').addEventListener('click', () => {
-            this.showFormatModal();
-        });
-
-        // Clear history
-        document.getElementById('clearHistory').addEventListener('click', () => {
-            this.clearHistory();
-        });
-
-        // Privacy and Terms buttons
-        document.getElementById('privacyBtn').addEventListener('click', () => {
-            this.showPrivacyModal();
-        });
-
-        document.getElementById('termsBtn').addEventListener('click', () => {
-            this.showTermsModal();
-        });
-
-        // Modal close buttons
-        document.getElementById('closeInfoModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closeFormatModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closePrivacyModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        document.getElementById('closeTermsModal').addEventListener('click', () => {
-            this.hideModals();
-        });
-
-        // Notification close
-        document.getElementById('closeNotification').addEventListener('click', () => {
-            this.hideNotification();
-        });
-
+        
         // URL input events
         const urlInput = document.getElementById('videoUrl');
-        urlInput.addEventListener('input', () => {
-            this.validateUrl();
-        });
-
-        urlInput.addEventListener('paste', (e) => {
-            setTimeout(() => this.validateUrl(), 100);
-        });
-
+        if (urlInput) {
+            urlInput.addEventListener('input', () => {
+                this.validateUrl();
+            });
+            
+            urlInput.addEventListener('paste', (e) => {
+                setTimeout(() => this.validateUrl(), 100);
+            });
+        }
+        
         // Close modals on backdrop click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -169,7 +81,7 @@ class TikTokSave {
                 }
             });
         });
-
+        
         // Escape key to close modals
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -177,8 +89,25 @@ class TikTokSave {
                 this.hideNotification();
             }
         });
-
-        console.log('All events bound');
+        
+        console.log('События успешно привязаны');
+    }
+    
+    bindButton(id, handler) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('click', handler);
+        } else {
+            console.warn(`Элемент с ID "${id}" не найден`);
+        }
+    }
+    
+    bindPlatformTabs() {
+        document.querySelectorAll('.platform-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                this.switchPlatform(e.currentTarget);
+            });
+        });
     }
 
     switchPlatform(tab) {
@@ -194,6 +123,8 @@ class TikTokSave {
 
     updatePlaceholder(platform) {
         const input = document.getElementById('videoUrl');
+        if (!input) return;
+        
         const placeholders = {
             'all': 'https://vt.tiktok.com/... или https://tiktok.com/...',
             'tiktok': 'https://vt.tiktok.com/ZSfV2hRgW/ или https://tiktok.com/@user/video/123',
@@ -207,23 +138,34 @@ class TikTokSave {
     async pasteFromClipboard() {
         try {
             const text = await navigator.clipboard.readText();
-            document.getElementById('videoUrl').value = text;
-            this.showNotification('Ссылка вставлена из буфера');
-            this.validateUrl();
+            const urlInput = document.getElementById('videoUrl');
+            if (urlInput) {
+                urlInput.value = text;
+                this.showNotification('Ссылка вставлена из буфера');
+                this.validateUrl();
+            }
         } catch (error) {
             this.showNotification('Не удалось получить доступ к буферу', 'error');
-            document.getElementById('videoUrl').focus();
+            const urlInput = document.getElementById('videoUrl');
+            if (urlInput) urlInput.focus();
         }
     }
 
     clearInput() {
-        document.getElementById('videoUrl').value = '';
-        this.validateUrl();
+        const urlInput = document.getElementById('videoUrl');
+        if (urlInput) {
+            urlInput.value = '';
+            this.validateUrl();
+        }
     }
 
     validateUrl() {
-        const url = document.getElementById('videoUrl').value.trim();
+        const urlInput = document.getElementById('videoUrl');
         const btn = document.getElementById('downloadBtn');
+        
+        if (!urlInput || !btn) return false;
+        
+        const url = urlInput.value.trim();
         
         if (!url) {
             btn.disabled = true;
@@ -237,29 +179,20 @@ class TikTokSave {
     }
 
     isValidUrl(url) {
-        const patterns = {
-            tiktok: [
-                /tiktok\.com\/.*\/video\/\d+/,
-                /vt\.tiktok\.com\/[A-Za-z0-9]+\//,
-                /vm\.tiktok\.com\/[A-Za-z0-9]+\//
-            ],
-            youtube: [
-                /youtube\.com\/watch\?v=[\w-]+/,
-                /youtu\.be\/[\w-]+/
-            ],
-            instagram: [
-                /instagram\.com\/(p|reel|tv)\/[\w-]+/,
-                /instagr\.am\/(p|reel|tv)\/[\w-]+/
-            ]
-        };
+        const patterns = [
+            // TikTok
+            /tiktok\.com\/.*\/video\/\d+/,
+            /vt\.tiktok\.com\/[A-Za-z0-9]+\//,
+            /vm\.tiktok\.com\/[A-Za-z0-9]+\//,
+            // YouTube
+            /youtube\.com\/watch\?v=[\w-]+/,
+            /youtu\.be\/[\w-]+/,
+            // Instagram
+            /instagram\.com\/(p|reel|tv)\/[\w-]+/,
+            /instagr\.am\/(p|reel|tv)\/[\w-]+/
+        ];
 
-        for (const platform in patterns) {
-            if (patterns[platform].some(pattern => pattern.test(url))) {
-                return true;
-            }
-        }
-
-        return false;
+        return patterns.some(pattern => pattern.test(url));
     }
 
     detectPlatform(url) {
@@ -281,7 +214,10 @@ class TikTokSave {
     async processVideo() {
         if (this.isProcessing) return;
         
-        const url = document.getElementById('videoUrl').value.trim();
+        const urlInput = document.getElementById('videoUrl');
+        if (!urlInput) return;
+        
+        const url = urlInput.value.trim();
         
         if (!url) {
             this.showNotification('Введите ссылку на видео', 'error');
@@ -303,7 +239,8 @@ class TikTokSave {
         this.setLoading(true);
 
         try {
-            const videoInfo = await this.fetchRealVideoInfo(url, platform);
+            // Для демонстрации используем mock данные
+            const videoInfo = this.generateMockVideoInfo(url, platform);
             this.currentVideo = { ...videoInfo, url: url };
             this.currentVideoUrl = videoInfo.downloadUrl;
             this.displayResults(videoInfo);
@@ -315,134 +252,6 @@ class TikTokSave {
             this.isProcessing = false;
             this.setLoading(false);
         }
-    }
-
-    async fetchRealVideoInfo(url, platform) {
-        try {
-            let videoData;
-            
-            switch(platform) {
-                case 'tiktok':
-                    videoData = await this.fetchTikTokInfo(url);
-                    break;
-                case 'youtube':
-                    videoData = await this.fetchYouTubeInfo(url);
-                    break;
-                case 'instagram':
-                    videoData = await this.fetchInstagramInfo(url);
-                    break;
-                default:
-                    throw new Error('Неподдерживаемая платформа');
-            }
-            
-            return videoData;
-        } catch (error) {
-            console.error('Error fetching video info:', error);
-            return this.generateMockVideoInfo(url, platform);
-        }
-    }
-
-    async fetchTikTokInfo(url) {
-        const apis = [
-            `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`,
-            `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`
-        ];
-
-        for (const apiUrl of apis) {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) continue;
-                
-                const data = await response.json();
-                
-                if (data.data) {
-                    return {
-                        title: data.data.title || 'TikTok видео',
-                        duration: data.data.duration || '--:--',
-                        size: Math.round((data.data.size || 10240000) / 1024 / 1024),
-                        platform: 'tiktok',
-                        noWatermark: true,
-                        downloadUrl: data.data.play || data.data.wmplay || data.data.hdplay
-                    };
-                }
-            } catch (error) {
-                console.warn(`API ${apiUrl} failed:`, error);
-                continue;
-            }
-        }
-        
-        throw new Error('Не удалось получить информацию о видео');
-    }
-
-    async fetchYouTubeInfo(url) {
-        const apis = [
-            `https://api.vevioz.com/api/button/mp4/${encodeURIComponent(url)}`,
-            `https://api.youtubedownloader.com/video?url=${encodeURIComponent(url)}`
-        ];
-
-        for (const apiUrl of apis) {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) continue;
-                
-                const data = await response.json();
-                
-                if (data.downloadUrl || data.url) {
-                    return {
-                        title: data.title || 'YouTube видео',
-                        duration: this.formatDuration(data.duration),
-                        size: Math.round((data.size || 10240000) / 1024 / 1024),
-                        platform: 'youtube',
-                        noWatermark: true,
-                        downloadUrl: data.downloadUrl || data.url
-                    };
-                }
-            } catch (error) {
-                console.warn(`API ${apiUrl} failed:`, error);
-                continue;
-            }
-        }
-        
-        throw new Error('Не удалось получить информацию о видео');
-    }
-
-    async fetchInstagramInfo(url) {
-        const apis = [
-            `https://api.igram.io/api/dl?url=${encodeURIComponent(url)}`
-        ];
-
-        for (const apiUrl of apis) {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) continue;
-                
-                const data = await response.json();
-                
-                if (data.media) {
-                    const videoUrl = Array.isArray(data.media) ? data.media[0] : data.media;
-                    return {
-                        title: data.title || 'Instagram видео',
-                        duration: '--:--',
-                        size: 15,
-                        platform: 'instagram',
-                        noWatermark: true,
-                        downloadUrl: videoUrl
-                    };
-                }
-            } catch (error) {
-                console.warn(`API ${apiUrl} failed:`, error);
-                continue;
-            }
-        }
-        
-        throw new Error('Не удалось получить информацию о видео');
-    }
-
-    formatDuration(seconds) {
-        if (!seconds) return '--:--';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
     generateMockVideoInfo(url, platform) {
@@ -460,7 +269,7 @@ class TikTokSave {
             size: Math.floor(Math.random() * 50) + 10,
             platform: platform,
             noWatermark: true,
-            downloadUrl: url
+            downloadUrl: url // Используем исходную ссылку для демо
         };
     }
 
@@ -501,87 +310,20 @@ class TikTokSave {
     }
 
     async startAutoDownload() {
-        if (!this.currentVideoUrl) return;
+        if (!this.currentVideoUrl) {
+            this.showNotification('Сначала найдите видео', 'error');
+            return;
+        }
         
         this.showNotification('Запускаем авто-сохранение...');
-        
-        if (this.os === 'android') {
-            await this.androidAutoDownload();
-        } else if (this.os === 'ios') {
-            await this.iosAutoDownload();
-        } else {
-            await this.universalAutoDownload();
-        }
-    }
-
-    async androidAutoDownload() {
-        try {
-            this.showNotification('Скачиваем для Android...');
-            
-            const success = await this.forceDownload(this.currentVideoUrl);
-            
-            if (success) {
-                this.showNotification('Видео скачано в Загрузки!');
-                this.saveToHistory(this.currentVideo);
-            } else {
-                this.showAndroidInstructions();
-            }
-        } catch (error) {
-            console.error('Android download error:', error);
-            this.showAndroidInstructions();
-        }
-    }
-
-    async iosAutoDownload() {
-        try {
-            this.showNotification('Открываем для iOS...');
-            this.showIOSInstructions();
-        } catch (error) {
-            console.error('iOS download error:', error);
-            this.showIOSInstructions();
-        }
-    }
-
-    async universalAutoDownload() {
-        try {
-            let success = await this.forceDownload(this.currentVideoUrl);
-            
-            if (!success) {
-                this.showUniversalInstructions();
-            } else {
-                this.showNotification('Видео успешно скачано!');
-                this.saveToHistory(this.currentVideo);
-            }
-        } catch (error) {
-            console.error('Universal download error:', error);
-            this.showUniversalInstructions();
-        }
-    }
-
-    async forceDownload(url) {
-        return new Promise((resolve) => {
-            try {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = this.generateFilename();
-                a.style.display = 'none';
-                
-                document.body.appendChild(a);
-                a.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    resolve(true);
-                }, 1000);
-                
-            } catch (error) {
-                resolve(false);
-            }
-        });
+        this.showUniversalInstructions();
     }
 
     handleDownloadMethod(method) {
-        if (!this.currentVideoUrl) return;
+        if (!this.currentVideoUrl) {
+            this.showNotification('Сначала найдите видео', 'error');
+            return;
+        }
         
         switch(method) {
             case 'auto':
@@ -599,100 +341,41 @@ class TikTokSave {
     directDownload() {
         if (!this.currentVideoUrl) return;
         
-        this.forceDownload(this.currentVideoUrl);
         this.showNotification('Пытаемся скачать напрямую...');
+        // Для демо просто открываем ссылку в новой вкладке
+        window.open(this.currentVideoUrl, '_blank');
     }
 
-    showAndroidInstructions() {
+    showUniversalInstructions() {
         const modal = document.getElementById('downloadInstructions');
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
-        title.textContent = 'Для Android';
+        if (!modal || !title || !content) return;
         
-        const safeUrl = this.escapeHtml(this.currentVideoUrl);
-        const safeFilename = this.escapeHtml(this.generateFilename());
-        
+        title.textContent = 'Скачать видео';
         content.innerHTML = `
-            <div class="download-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <strong>Нажмите "Скачать" ниже</strong>
-                        <p>Откроется диалог скачивания</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <strong>Сохраните видео</strong>
-                        <p>Выберите папку "Загрузки" или "Downloads"</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <strong>Найдите в галерее</strong>
-                        <p>Видео появится в приложении "Фото" или "Галерея"</p>
-                    </div>
-                </div>
-            </div>
-            <div class="download-actions">
-                <a href="${safeUrl}" download="${safeFilename}" class="download-link">
-                    Скачать видео сейчас
+            <div class="download-options">
+                <button class="download-option-btn primary" onclick="app.directDownload()">
+                    Прямое скачивание
+                </button>
+                
+                <a href="${this.escapeHtml(this.currentVideoUrl)}" target="_blank" class="download-option-btn secondary">
+                    Открыть и сохранить
                 </a>
-                <button onclick="app.hideModals()" class="final-download-btn secondary">
-                    Закрыть
-                </button>
+                
+                <a href="${this.escapeHtml(this.currentVideoUrl)}" download="video.mp4" class="download-option-btn success">
+                    Скачать файл
+                </a>
             </div>
-        `;
-        
-        modal.classList.remove('hidden');
-    }
-
-    showIOSInstructions() {
-        const modal = document.getElementById('downloadInstructions');
-        const title = document.getElementById('instructionsTitle');
-        const content = document.getElementById('instructionsContent');
-        
-        title.textContent = 'Для iPhone';
-        
-        const safeUrl = this.escapeHtml(this.currentVideoUrl);
-        
-        content.innerHTML = `
-            <div class="download-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <strong>Нажмите на видео ниже</strong>
-                        <p>Откроется видео в полноэкранном режиме</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <strong>Нажмите "Поделиться"</strong>
-                        <p>Иконка квадрата со стрелкой вверх</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <strong>Выберите "Сохранить видео"</strong>
-                        <p>Видео сохранится в приложение "Фото"</p>
-                    </div>
-                </div>
-            </div>
-            <div class="video-preview">
-                <video controls autoplay muted style="max-width: 100%; border-radius: 10px;">
-                    <source src="${safeUrl}" type="video/mp4">
-                    Ваш браузер не поддерживает видео.
-                </video>
-            </div>
-            <div class="download-actions">
-                <button onclick="app.hideModals()" class="final-download-btn primary">
-                    Понятно
-                </button>
+            
+            <div class="mobile-tips">
+                <h4>Советы для мобильных:</h4>
+                <ul>
+                    <li><strong>Android:</strong> Скачается в папку "Загрузки"</li>
+                    <li><strong>iPhone:</strong> Нажмите "Поделиться" → "Сохранить видео"</li>
+                    <li><strong>Все устройства:</strong> Долгое нажатие на ссылку</li>
+                </ul>
             </div>
         `;
         
@@ -704,11 +387,9 @@ class TikTokSave {
         const title = document.getElementById('instructionsTitle');
         const content = document.getElementById('instructionsContent');
         
+        if (!modal || !title || !content) return;
+        
         title.textContent = 'Ручное сохранение';
-        
-        const safeUrl = this.escapeHtml(this.currentVideoUrl);
-        const safeFilename = this.escapeHtml(this.generateFilename());
-        
         content.innerHTML = `
             <div class="download-steps">
                 <div class="step">
@@ -734,7 +415,7 @@ class TikTokSave {
                 </div>
             </div>
             <div class="download-actions">
-                <a href="${safeUrl}" download="${safeFilename}" class="download-link">
+                <a href="${this.escapeHtml(this.currentVideoUrl)}" download="video.mp4" class="download-link">
                     Нажмите и удерживайте для скачивания
                 </a>
                 <button onclick="app.hideModals()" class="final-download-btn secondary">
@@ -746,77 +427,39 @@ class TikTokSave {
         modal.classList.remove('hidden');
     }
 
-    showUniversalInstructions() {
-        const modal = document.getElementById('downloadInstructions');
-        const title = document.getElementById('instructionsTitle');
-        const content = document.getElementById('instructionsContent');
-        
-        title.textContent = 'Скачать видео';
-        
-        const safeUrl = this.escapeHtml(this.currentVideoUrl);
-        const safeFilename = this.escapeHtml(this.generateFilename());
-        
-        content.innerHTML = `
-            <div class="download-options">
-                <button class="download-option-btn primary" onclick="app.directDownload()">
-                    Прямое скачивание
-                </button>
-                
-                <a href="${safeUrl}" target="_blank" class="download-option-btn secondary">
-                    Открыть и сохранить
-                </a>
-                
-                <a href="${safeUrl}" download="${safeFilename}" class="download-option-btn success">
-                    Скачать файл
-                </a>
-            </div>
-            
-            <div class="mobile-tips">
-                <h4>Советы для мобильных:</h4>
-                <ul>
-                    <li><strong>Android:</strong> Скачается в папку "Загрузки"</li>
-                    <li><strong>iPhone:</strong> Нажмите "Поделиться" → "Сохранить видео"</li>
-                    <li><strong>Все устройства:</strong> Долгое нажатие на ссылку</li>
-                </ul>
-            </div>
-        `;
-        
-        modal.classList.remove('hidden');
-    }
-
-    generateFilename() {
-        const timestamp = new Date().getTime();
-        const platform = this.currentVideo?.platform || 'video';
-        const title = this.currentVideo?.title?.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').substring(0, 20) || 'video';
-        return `TikTokSave_${platform}_${title}_${timestamp}.mp4`;
-    }
-
     shareVideo() {
         this.hideResults();
-        document.getElementById('videoUrl').value = '';
-        document.getElementById('videoUrl').focus();
+        const urlInput = document.getElementById('videoUrl');
+        if (urlInput) {
+            urlInput.value = '';
+            urlInput.focus();
+        }
         this.showNotification('Готово для новой ссылки');
     }
 
     saveToHistory(videoInfo) {
-        const history = this.getHistory();
-        const historyItem = {
-            id: Date.now(),
-            title: videoInfo.title,
-            url: videoInfo.url,
-            platform: videoInfo.platform,
-            date: new Date().toISOString(),
-            size: videoInfo.size,
-            duration: videoInfo.duration
-        };
-        
-        history.unshift(historyItem);
-        if (history.length > 10) {
-            history.pop();
+        try {
+            const history = this.getHistory();
+            const historyItem = {
+                id: Date.now(),
+                title: videoInfo.title,
+                url: videoInfo.url,
+                platform: videoInfo.platform,
+                date: new Date().toISOString(),
+                size: videoInfo.size,
+                duration: videoInfo.duration
+            };
+            
+            history.unshift(historyItem);
+            if (history.length > 10) {
+                history.pop();
+            }
+            
+            localStorage.setItem('tiktoksave_history', JSON.stringify(history));
+            this.loadHistory();
+        } catch (error) {
+            console.error('Ошибка сохранения истории:', error);
         }
-        
-        localStorage.setItem('tiktoksave_history', JSON.stringify(history));
-        this.loadHistory();
     }
 
     getHistory() {
@@ -836,6 +479,7 @@ class TikTokSave {
         if (history.length === 0) {
             historyList.innerHTML = `
                 <div class="empty-state">
+                    <i class="fas fa-tv"></i>
                     <p>Здесь появятся ваши последние загрузки</p>
                 </div>
             `;
@@ -845,7 +489,6 @@ class TikTokSave {
         historyList.innerHTML = history.map(item => {
             const safeTitle = this.escapeHtml(item.title);
             const safeUrl = this.escapeHtml(item.url);
-            const safePlatform = this.escapeHtml(item.platform);
             
             return `
             <div class="history-item fade-in">
@@ -854,7 +497,7 @@ class TikTokSave {
                     <div class="history-meta">
                         <span>${new Date(item.date).toLocaleDateString()}</span>
                         <span>•</span>
-                        <span>${this.getPlatformName(safePlatform)}</span>
+                        <span>${this.getPlatformName(item.platform)}</span>
                         <span>•</span>
                         <span>${item.size} MB</span>
                     </div>
@@ -869,18 +512,13 @@ class TikTokSave {
         }).join('');
     }
 
-    getPlatformIcon(platform) {
-        const icons = {
-            tiktok: 'TikTok',
-            youtube: 'YouTube',
-            instagram: 'Instagram'
-        };
-        return icons[platform] || 'Видео';
-    }
-
     redownload(url) {
-        document.getElementById('videoUrl').value = url;
-        this.processVideo();
+        const urlInput = document.getElementById('videoUrl');
+        if (urlInput) {
+            urlInput.value = url;
+            this.validateUrl();
+            this.processVideo();
+        }
     }
 
     clearHistory() {
@@ -934,28 +572,23 @@ class TikTokSave {
     }
 
     showInfoModal() {
-        const modal = document.getElementById('infoModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
+        this.showModal('infoModal');
     }
 
     showFormatModal() {
-        const modal = document.getElementById('formatModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
+        this.showModal('formatModal');
     }
 
     showPrivacyModal() {
-        const modal = document.getElementById('privacyModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
+        this.showModal('privacyModal');
     }
 
     showTermsModal() {
-        const modal = document.getElementById('termsModal');
+        this.showModal('termsModal');
+    }
+    
+    showModal(modalId) {
+        const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('hidden');
         }
@@ -998,8 +631,7 @@ class TikTokSave {
 
     escapeHtml(unsafe) {
         if (!unsafe) return '';
-        return unsafe
-            .toString()
+        return unsafe.toString()
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
@@ -1008,18 +640,26 @@ class TikTokSave {
     }
 }
 
-// Инициализация приложения
-let app;
-document.addEventListener('DOMContentLoaded', function() {
-    app = new TikTokSave();
-});
+// Экспортируем класс в глобальную область видимости
+window.TikTokSave = TikTokSave;
+
+// Автоматическая инициализация при загрузке DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM загружен, запуск TikTokSave...');
+        window.app = new TikTokSave();
+    });
+} else {
+    console.log('DOM уже загружен, запуск TikTokSave...');
+    window.app = new TikTokSave();
+}
 
 // Обработка ошибок
 window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
+    console.error('Глобальная ошибка:', e.error);
 });
 
 window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled promise rejection:', e.reason);
+    console.error('Необработанное отклонение промиса:', e.reason);
 });
 [file content end]
